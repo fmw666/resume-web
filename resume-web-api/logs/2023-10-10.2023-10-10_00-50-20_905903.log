@@ -1,0 +1,149 @@
+2023-10-10 00:50:20.921 | INFO     | core.events:start_app:16 - fastapi 项目启动.
+2023-10-10 00:50:28.305 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 00:50:28.800 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/favicon.ico
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 00:50:32.198 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 00:50:34.727 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 00:52:49.276 | INFO     | core.events:stop_app:25 - fastapi 项目结束.
+2023-10-10 00:52:51.724 | INFO     | core.events:start_app:16 - fastapi 项目启动.
+2023-10-10 00:57:56.731 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:02:45.300 | INFO     | core.events:stop_app:25 - fastapi 项目结束.
+2023-10-10 01:02:48.572 | INFO     | core.events:start_app:16 - fastapi 项目启动.
+2023-10-10 01:02:54.237 | INFO     | core.events:stop_app:25 - fastapi 项目结束.
+2023-10-10 01:03:25.918 | INFO     | core.events:start_app:16 - fastapi 项目启动.
+2023-10-10 01:03:31.998 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:03:33.600 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:03:33.746 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:03:38.518 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:03:42.893 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:04:41.483 | INFO     | core.events:start_app:16 - fastapi 项目启动.
+2023-10-10 01:05:34.621 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:06:38.154 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:06:42.286 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:08:53.548 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:09:13.186 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:09:20.074 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:09:23.427 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+headers: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+IP:127.0.0.1
+2023-10-10 01:10:05.329 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:10:07.234 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/
+IP:127.0.0.1
+2023-10-10 01:10:19.192 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:10:20.498 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/users/ | IP:127.0.0.1
+2023-10-10 01:10:50.642 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:10:52.425 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:27:24.498 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:27:24.505 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 01:27:24.631 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 01:28:41.125 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:29:24.457 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:34:59.608 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:36:51.706 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 01:59:03.083 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:08:54.684 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:09:04.520 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 02:09:04.651 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 02:09:11.052 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 02:10:24.690 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:18:11.877 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:18:28.516 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:18:38.973 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:18:44.198 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:21:14.927 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 02:21:15.034 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 02:24:29.558 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:28:28.539 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:28:31.304 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:29:33.554 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:30:21.216 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 02:30:21.336 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 02:30:25.974 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 02:30:32.032 | INFO     | core.events:stop_app:23 - fastapi 项目结束.
+2023-10-10 02:31:42.458 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 02:31:42.527 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 02:31:42.672 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 02:31:50.371 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 02:36:46.640 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 03:00:51.705 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:05:29.508 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:07:27.843 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 03:07:31.223 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:14:30.972 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:14:55.550 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 03:15:27.125 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:15:27.129 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:19:35.023 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:19:35.027 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:20:06.802 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:20:06.805 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:20:46.271 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:20:46.275 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:22:20.310 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 03:22:22.941 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:22:22.947 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:26:02.844 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 03:26:02.848 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 13:55:12.342 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 13:55:42.215 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/docs | IP:127.0.0.1
+2023-10-10 13:55:43.146 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/openapi.json | IP:127.0.0.1
+2023-10-10 13:58:07.382 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 14:47:33.724 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 14:47:52.480 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 14:47:53.651 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 14:49:08.872 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 14:49:32.200 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 17:53:21.436 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 17:53:24.451 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 17:53:32.762 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 17:54:15.403 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:34:33.325 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 18:34:36.368 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:35:48.801 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:36:38.710 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:48:01.789 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:48:23.920 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:48:57.453 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 18:49:00.732 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:49:17.065 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 18:50:43.274 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:50:58.418 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:56:11.997 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 18:58:32.194 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 18:58:42.202 | INFO     | core.events:start_app:15 - fastapi 项目启动.
+2023-10-10 18:58:44.977 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 18:58:54.069 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 20:51:46.428 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 20:51:57.471 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 20:52:03.173 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 20:52:05.149 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 20:52:06.253 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 20:52:09.829 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/download | IP:127.0.0.1
+2023-10-10 22:39:20.573 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 22:39:20.586 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/message | IP:127.0.0.1
+2023-10-10 22:39:57.753 | INFO     | middleware.logger:dispatch:10 - GET url:http://127.0.0.1:8000/api/resume/info | IP:127.0.0.1
+2023-10-10 22:40:08.812 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/messages | IP:127.0.0.1
+2023-10-10 22:40:08.817 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/messages | IP:127.0.0.1

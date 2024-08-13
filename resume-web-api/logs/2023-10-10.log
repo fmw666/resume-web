@@ -1,0 +1,2 @@
+2023-10-11 00:07:11.114 | INFO     | middleware.logger:dispatch:10 - OPTIONS url:http://127.0.0.1:8000/api/resume/messages | IP:127.0.0.1
+2023-10-11 00:07:11.119 | INFO     | middleware.logger:dispatch:10 - POST url:http://127.0.0.1:8000/api/resume/messages | IP:127.0.0.1
