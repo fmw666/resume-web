@@ -1296,19 +1296,12 @@ select.portfolio-filter-mobile {
   outline: 0;
   margin-bottom: 30px;
   position: relative;
-  width: 100%;
+  width: calc(100% - 30px);
+  padding: 5px;
 }
 
 .pf-filter-wrapper {
   position: relative;
-}
-.pf-filter-wrapper:after {
-  content: "";
-  font-family: "FontAwesome";
-  position: absolute;
-  top: 0;
-  right: 20px;
-  color: #000;
 }
 
 /*=================================================================*/
@@ -1997,7 +1990,8 @@ body.dark .triangle-top:before {
   border-bottom-color: #302f4e;
 }
 body.dark .timeline.exp .timeline-container::after, body.dark .timeline.edu .timeline-container::after {
-  background: #302f4e;
+  /* background: #302f4e; */
+  background: #353353;
 }
 body.dark .portfolio-filter li {
   color: #FFF;
@@ -2989,7 +2983,8 @@ body {
   }
 
   .pf-filter-wrapper {
-    display: block;
+    display: flex;
+    justify-content: center;
   }
 
   .triangle-top-sm:before {
