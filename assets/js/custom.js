@@ -383,22 +383,52 @@ $(document).on('ready', function() {
     =========================================================================*/
     let audio = new Audio('assets/audios/self-intro.mp3');
 
-    // 获取要点击的元素
-    const playButton = document.getElementById('about-introduce');
+    let playButton = null; // 初始值为空
 
-    // 绑定点击事件
-    playButton.addEventListener('click', () => {
+    // 最大重试次数
+    const maxRetries = 5;
+    let attempts = 0;
+
+    // 尝试获取 playButton
+    const getPlayButton = () => {
+      playButton = document.getElementById('about-introduce');
+      if (playButton) {
+        console.log("Successfully found the play button!");
+        setUpPlayButton(); // 设置事件监听器
+      } else if (attempts < maxRetries) {
+        attempts++;
+        console.log(`Attempt ${attempts}: playButton not found, retrying...`);
+      } else {
+        console.error('Failed to find play button within the timeout period.');
+      }
+    };
+
+    // 设置事件监听器
+    const setUpPlayButton = () => {
+      playButton.addEventListener('click', () => {
         // 如果音频正在播放，暂停并重置
         if (!audio.paused) {
-            audio.pause();
-            audio.currentTime = 0;
+          audio.pause();
+          audio.currentTime = 0;
         }
 
         // 重新播放音频
         audio.play().catch(error => {
-            console.log("Error playing audio:", error);
+          console.log("Error playing audio:", error);
         });
-    });
+      });
+    };
+
+    // 尝试获取 playButton，每100毫秒一次，最多尝试5次（500毫秒）
+    const timeout = setInterval(getPlayButton, 100);
+
+    // 超时后清除定时器
+    setTimeout(() => {
+      clearInterval(timeout); // 停止继续尝试
+      if (!playButton) {
+        console.error('playButton was not found within 5 seconds.');
+      }
+    }, 5000);
 
 });
 
