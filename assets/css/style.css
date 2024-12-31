@@ -475,7 +475,7 @@ header.desktop-header-1.open {
 }
 header.desktop-header-1 .site-logo {
   flex: 20%;
-  padding: 40px 0;
+  padding: 0 0 30px 0;
 }
 header.desktop-header-1 .site-nav {
   flex: 60%;
@@ -781,7 +781,7 @@ header.mobile-header-1 .site-logo {
   vertical-align: bottom;
 }
 header.mobile-header-1 .site-logo img {
-  max-height: 30px;
+  max-height: 100px;
 }
 header.mobile-header-1.light {
   background: #e0e5ec;
@@ -2928,6 +2928,10 @@ body {
 
   header.mobile-header-1 {
     display: block;
+  }
+  header.mobile-header-1 .container {
+    display: flex;
+    align-items: center;
   }
 
   main.content {

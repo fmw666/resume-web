@@ -8,6 +8,7 @@ AI 组件
 网页图片由 comfyui flux 生成
 网页音频由 fish-speech 生成
 网页机器人由 Botpress 生成
+网页 Logo 由 chatgpt 4o 生成
 
 ===
 
