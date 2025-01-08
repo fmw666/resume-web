@@ -218,21 +218,21 @@ $(window).on('load', function() {
       });
 
       $('.gallery-link').on('click', function () {
-          $(this).next().magnificPopup('open');
+        $(this).next().magnificPopup('open');
       });
 
       $('.gallery').each(function () {
-          $(this).magnificPopup({
-              delegate: 'a',
-              type: 'image',
-              closeBtnInside: false,
-              gallery: {
-                  enabled: true,
-                  navigateByImgClick: true
-              },
-              fixedContentPos: false,
-              mainClass: 'my-mfp-zoom-in',
-          });
+        $(this).magnificPopup({
+          delegate: 'a',
+          type: 'image',
+          closeBtnInside: false,
+          gallery: {
+            enabled: true,
+            navigateByImgClick: true
+          },
+          fixedContentPos: false,
+          mainClass: 'my-mfp-zoom-in',
+        });
       });
     }
 
@@ -245,23 +245,35 @@ $(window).on('load', function() {
     var pagesNum = $(".portfolio-pagination").find("li a:last").text();   // Number of pages
 
     $container.infinitescroll({
-        itemSelector: '.grid-item',
-        nextSelector: '.portfolio-pagination li a',
-        navSelector: '.portfolio-pagination',
-        extraScrollPx: 0,
-        bufferPx: 0,
-        maxPage: 6,
-        loading: {
-            finishedMsg: "No more works",
-            msgText: '',
-            speed: 'slow',
-            selector: '.load-more',
-        }
+      itemSelector: '.grid-item',
+      nextSelector: '.portfolio-pagination li a',
+      navSelector: '.portfolio-pagination',
+      extraScrollPx: 0,
+      bufferPx: 0,
+      maxPage: 6,
+      loading: {
+        finishedMsg: "No more works",
+        msgText: '',
+        speed: 'slow',
+        selector: '.load-more',
+      }
     },
     // trigger Masonry as a callback
     function( newElements ) {
-
       var $newElems = $( newElements );
+      // get theme config
+      var theme = localStorage.getItem('theme');
+      // 检查系统颜色主题，如果是亮色主题，则添加 light class
+      if ( theme !== 'light' ) {
+        $newElems.each(function() {
+          $(this).children().children().removeClass('light');
+        });
+      } else {
+        $newElems.each(function() {
+          $(this).children().children().addClass('light');
+        });
+      }
+
       $newElems.imagesLoaded(function(){  
         $newElems.animate({ opacity: 1 });
         $container.isotope( 'appended', $newElems );
@@ -337,7 +349,6 @@ $(document).on('ready', function() {
 
       // get theme config
       var theme = localStorage.getItem('theme');
-
       if (theme === 'dark') {
         // remove dark
 
