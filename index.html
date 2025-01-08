@@ -523,22 +523,22 @@
     <!-- portfolio filter (desktop) -->
     <ul class="portfolio-filter list-inline wow fadeInUp">
       <li class="current list-inline-item light" data-filter="*">Everything</li>
+      <li class="list-inline-item light" data-filter=".python">Python</li>
       <li class="list-inline-item light" data-filter=".web">Web</li>
-      <li class="list-inline-item light" data-filter=".creative">Creative</li>
-      <li class="list-inline-item light" data-filter=".art">Art</li>
-      <li class="list-inline-item light" data-filter=".design">Design</li>
-      <li class="list-inline-item light" data-filter=".branding">Branding</li>
+      <li class="list-inline-item light" data-filter=".aigc">AIGC</li>
+      <li class="list-inline-item light" data-filter=".aws">AWS</li>
+      <li class="list-inline-item light" data-filter=".game">Game</li>
     </ul>
 
     <!-- portfolio filter (mobile) -->
     <div class="pf-filter-wrapper">
       <select class="portfolio-filter-mobile">
         <option value="*">Everything</option>
+        <option value=".python">Python</option>
         <option value=".web">Web</option>
-        <option value=".creative">Creative</option>
-        <option value=".art">Art</option>
-        <option value=".design">Design</option>
-        <option value=".branding">Branding</option>
+        <option value=".aigc">AIGC</option>
+        <option value=".aws">AWS</option>
+        <option value=".game">Game</option>
       </select>
     </div>
 
@@ -546,78 +546,68 @@
     <div class="row portfolio-wrapper">
 
       <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item art">
-        <a href="assets/images/works/1.svg" class="work-image">
-          <div class="portfolio-item rounded shadow-dark light">
-            <div class="details">
-              <span class="term">Art</span>
-              <h4 class="title">Project Managment Illustration</h4>
-              <span class="more-button"><i
-                  class="icon-magnifier-add"></i></span>
-            </div>
-            <div class="thumb">
-              <img src="assets/images/works/1.svg" alt="Portfolio-title" />
-              <div class="mask"></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item creative design">
+      <div class="col-md-4 col-sm-6 grid-item web python">
         <a href="#small-dialog" class="work-content">
           <div class="portfolio-item rounded shadow-dark light">
             <div class="details">
-              <span class="term">Creative</span>
-              <h4 class="title">Guest App Walkthrough Screens</h4>
+              <span class="term">Python, Web</span>
+              <h4 class="title">FastAPI-Builder</h4>
               <span class="more-button"><i class="icon-options"></i></span>
             </div>
             <div class="thumb">
-              <img src="assets/images/works/2.svg" alt="Portfolio-title" />
+              <img src="assets/images/works/fastapi-builder.png" alt="Portfolio-title" />
               <div class="mask"></div>
             </div>
           </div>
         </a>
         <div id="small-dialog" class="white-popup zoom-anim-dialog mfp-hide">
-          <img src="assets/images/single-work.svg" alt="Title" />
-          <h2>Guest App Walkthrough Screens</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-            hendrerit nibh in massa semper rutrum. In rhoncus eleifend mi id
-            tempus.</p>
-          <p>Donec consectetur, libero at pretium euismod, nisl felis lobortis
-            urna, id tristique nisl lectus eget ligula.</p>
-          <a href="#" class="btn btn-default">View on Dribbble</a>
+          <img src="assets/images/works/fastapi-builder.png" alt="Title" />
+          <h2>FastAPI-Builder</h2>
+          <p>A tool that helps you quickly build FastAPI projects.</p>
+          <p>"Similar to django-admin, best practices, scalable project structure, rich documentation, application management,
+            database management, environment management, Docker, and other foundational configurations."</p>
+          <div class="spacer light" data-height="16"></div>
+          <a href="https://github.com/fmw666/fastapi-builder" target="_blank" class="btn btn-default">View on Github</a>
         </div>
       </div>
 
       <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item branding">
-        <a href="#" class="work-video">
+      <div class="col-md-4 col-sm-6 grid-item web python aigc">
+        <a href="#small-dialog-4" class="work-link">
           <div class="portfolio-item rounded shadow-dark light">
             <div class="details">
-              <span class="term">Branding</span>
-              <h4 class="title">Delivery App Wireframe</h4>
-              <span class="more-button"><i class="icon-camrecorder"></i></span>
-            </div>
-            <div class="thumb">
-              <img src="assets/images/works/3.svg" alt="Portfolio-title" />
-              <div class="mask"></div>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item creative">
-        <a href="#" class="work-video">
-          <div class="portfolio-item rounded shadow-dark light">
-            <div class="details">
-              <span class="term">Creative</span>
-              <h4 class="title">Onboarding Motivation</h4>
+              <span class="term">Web, Python, AIGC</span>
+              <h4 class="title">DesignGPT-V3 Website</h4>
               <span class="more-button"><i class="icon-link"></i></span>
             </div>
             <div class="thumb">
-              <img src="assets/images/works/4.svg" alt="Portfolio-title" />
+              <img src="assets/images/works/designgpt.png" alt="Portfolio-title" />
+              <div class="mask"></div>
+            </div>
+          </div>
+        </a>
+        <div id="small-dialog-4" class="white-popup link-popup zoom-anim-dialog mfp-hide">
+          <h2>DesignGTP-V3</h2>
+          <iframe src="https://www.designgpt.art/" class="mfp-iframe" frameborder="0" allowfullscreen>
+          </iframe>
+          <div class="spacer light" data-height="16"></div>
+          <div class="div-right">
+            <a href="https://www.designgpt.art/" target="_blank" class="btn btn-default">Open in new tab</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- portfolio item -->
+      <div class="col-md-4 col-sm-6 grid-item web python aigc">
+        <a href="assets/videos/works/designgpt-v2.mp4" class="work-video">
+          <div class="portfolio-item rounded shadow-dark light">
+            <div class="details">
+              <span class="term">Web, Python, AIGC</span>
+              <h4 class="title">DesignGPT-V2 Website</h4>
+              <span class="more-button"><i class="icon-camrecorder"></i></span>
+            </div>
+            <div class="thumb">
+              <img src="assets/images/works/designgpt-v2.png" alt="Portfolio-title" />
               <div class="mask"></div>
             </div>
           </div>
@@ -625,38 +615,86 @@
       </div>
 
       <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item web">
+      <div class="col-md-4 col-sm-6 grid-item python">
         <a href="#gallery-1" class="gallery-link">
           <div class="portfolio-item rounded shadow-dark light">
             <div class="details">
-              <span class="term">Art, Branding</span>
-              <h4 class="title">iMac Mockup Design</h4>
+              <span class="term">Python, GUI</span>
+              <h4 class="title">GUI Tools</h4>
               <span class="more-button"><i class="icon-picture"></i></span>
             </div>
             <div class="thumb">
-              <img src="assets/images/works/5.svg" alt="Portfolio-title" />
+              <img src="assets/images/works/gui-tools/tools-1.png" alt="Portfolio-title" />
               <div class="mask"></div>
             </div>
           </div>
         </a>
         <div id="gallery-1" class="gallery mfp-hide">
-          <a href="assets/images/works/pmx-on-web/pose.png"></a>
-          <a href="assets/images/works/pmx-on-web/motion.gif"></a>
-          <a href="assets/images/works/pmx-on-web/face.png"></a>
+          <a href="assets/images/works/gui-tools/tools-1.png"></a>
+          <a href="assets/images/works/gui-tools/tools-2.png"></a>
+          <a href="assets/images/works/gui-tools/tools-3.png"></a>
+          <a href="assets/images/works/gui-tools/tools-4.png"></a>
+          <a href="assets/images/works/gui-tools/tools-5.png"></a>
+          <a href="assets/images/works/gui-tools/tools-6.png"></a>
+          <a href="assets/images/works/gui-tools/tools-7.png"></a>
         </div>
       </div>
 
       <!-- portfolio item -->
-      <div class="col-md-4 col-sm-6 grid-item creative design">
-        <a href="https://github.com/fmw666/fastapi-builder" class="work-video">
+      <div class="col-md-4 col-sm-6 grid-item web game">
+        <a href="#small-dialog-2" class="work-content">
           <div class="portfolio-item rounded shadow-dark light">
             <div class="details">
-              <span class="term">Creative, Design</span>
-              <h4 class="title">FastAPI-Builder</h4>
-              <span class="more-button"><i class="icon-link"></i></span>
+              <span class="term">Web</span>
+              <h4 class="title">WebGL-based PMX renderer</h4>
+              <span class="more-button"><i class="icon-options"></i></span>
             </div>
             <div class="thumb">
-              <img src="assets/images/works/6.svg" alt="Portfolio-title" />
+              <img src="assets/images/works/pmx-on-web/pose.png" alt="Portfolio-title" />
+              <div class="mask"></div>
+            </div>
+          </div>
+        </a>
+        <div id="small-dialog-2" class="white-popup zoom-anim-dialog mfp-hide">
+          <img src="assets/images/works/pmx-on-web/face.png" alt="Title" />
+          <h2>PMX On Web</h2>
+          <p>This project is a WebGL-based PMX renderer that can load and render PMX models in a browser.</p>
+          <p>Additional functions: add action library and posture library; Control model facial details via audio or customizations; 
+            Physical model effect; Images and actions are recorded and saved.</p>
+          <p>(If you like the <b>Genshin</b> or <b>Starrail</b> games, you will enjoy this project even more~)</p>
+          <div class="spacer light" data-height="16"></div>
+          <a href="https://pmx-on-web.vercel.app/" target="_blank" class="btn btn-default">Try it now!</a>
+        </div>
+      </div>
+
+      <!-- portfolio item -->
+      <div class="col-md-4 col-sm-6 grid-item web python aigc">
+        <a href="assets/videos/works/comfyflowapp.mp4" class="work-video">
+          <div class="portfolio-item rounded shadow-dark light">
+            <div class="details">
+              <span class="term">Web, Python, AIGC</span>
+              <h4 class="title">Comfy Flow APP</h4>
+              <span class="more-button"><i class="icon-camrecorder"></i></span>
+            </div>
+            <div class="thumb">
+              <img src="assets/images/works/comfyflowapp.png" alt="Portfolio-title" />
+              <div class="mask"></div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- portfolio item -->
+      <div class="col-md-4 col-sm-6 grid-item web python aws">
+        <a href="assets/videos/works/aws-cdk.mp4" class="work-video">
+          <div class="portfolio-item rounded shadow-dark light">
+            <div class="details">
+              <span class="term">Web, Python, AWS</span>
+              <h4 class="title">AWS CDK demo Project</h4>
+              <span class="more-button"><i class="icon-camrecorder"></i></span>
+            </div>
+            <div class="thumb">
+              <img src="assets/images/works/aws-cdk.png" alt="Portfolio-title" />
               <div class="mask"></div>
             </div>
           </div>

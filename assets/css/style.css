@@ -475,7 +475,10 @@ header.desktop-header-1.open {
 }
 header.desktop-header-1 .site-logo {
   flex: 20%;
-  padding: 0 0 30px 0;
+  padding: 0 0 80px 0;
+}
+header.desktop-header-1 .site-logo img {
+  height: 100px;
 }
 header.desktop-header-1 .site-nav {
   flex: 60%;
@@ -782,6 +785,7 @@ header.mobile-header-1 .site-logo {
 }
 header.mobile-header-1 .site-logo img {
   max-height: 100px;
+  height: 70px;
 }
 header.mobile-header-1.light {
   background: #e0e5ec;
@@ -1175,6 +1179,10 @@ section.home.light .social-icons li a:hover {
 }
 .portfolio-item .thumb {
   overflow: hidden;
+  padding: 14px;
+}
+.portfolio-item .thumb img {
+  border-radius: 6px;
 }
 .portfolio-item .details {
   color: #FFF;
@@ -2693,6 +2701,22 @@ body.dark .blog-page-section .blog-single {
   max-width: 650px;
   margin: 40px auto;
   position: relative;
+}
+.white-popup img {
+  border-radius: 6px;
+}
+
+.link-popup {
+  max-width: 80%;
+  margin: auto;
+}
+.link-popup h2 {
+  margin-top: 0;
+}
+.link-popup .div-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /**

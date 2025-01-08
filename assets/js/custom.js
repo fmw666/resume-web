@@ -131,6 +131,11 @@ $(window).on('load', function() {
       /*=========================================================================
               Magnific Popup
       =========================================================================*/
+      // don't need to use this function, just for demo purpose
+      // $('.close-popup').on('click', function() {
+      //   $.magnificPopup.close(); // Close the Magnific Popup
+      // });
+
       $('.work-image').magnificPopup({
         type: 'image',
         closeBtnInside: false,
@@ -149,37 +154,67 @@ $(window).on('load', function() {
         mainClass: 'my-mfp-zoom-in'
       });
 
+      $('.work-link').magnificPopup({
+        type: 'inline',
+        fixedContentPos: true,
+        fixedBgPos: true,
+        overflowY: 'auto',
+        closeBtnInside: false,
+        preloader: false,
+        midClick: true,
+        removalDelay: 300,
+        mainClass: 'my-mfp-zoom-in',
+        callbacks: {
+          open: function() {
+            // 修改弹出层 iframe 的宽度和高度为 100%
+            $('.mfp-iframe').css({
+              'width': '100%',
+              'height': '60vh', // 设置高度为屏幕高度
+            });
+          }
+        }  
+      });
+
       $('.work-video').magnificPopup({
         type: 'iframe',
         closeBtnInside: false,
         iframe: {
-            markup: '<div class="mfp-iframe-scaler">'+
-                      '<div class="mfp-close"></div>'+
-                      '<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
-                    '</div>', 
+          markup: '<div class="mfp-iframe-scaler">'+
+                    '<div class="mfp-close"></div>'+
+                    '<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+                  '</div>', 
 
-            patterns: {
-              youtube: {
-                index: 'youtube.com/',
+          patterns: {
+            youtube: {
+              index: 'youtube.com/',
 
-                id: 'v=',
+              id: 'v=',
 
-                src: 'https://www.youtube.com/embed/%id%?autoplay=1'
-              },
-              vimeo: {
-                index: 'vimeo.com/',
-                id: '/',
-                src: '//player.vimeo.com/video/%id%?autoplay=1'
-              },
-              gmaps: {
-                index: '//maps.google.',
-                src: '%id%&output=embed'
-              }
-
+              src: 'https://www.youtube.com/embed/%id%?autoplay=1'
             },
+            vimeo: {
+              index: 'vimeo.com/',
+              id: '/',
+              src: '//player.vimeo.com/video/%id%?autoplay=1'
+            },
+            gmaps: {
+              index: '//maps.google.',
+              src: '%id%&output=embed'
+            }
 
-            srcAction: 'iframe_src',
+          },
+
+          srcAction: 'iframe_src',
+        },
+        callbacks: {
+          open: function() {
+            // 修改弹出层 iframe 的宽度和高度为 100%
+            $('.mfp-iframe').css({
+              'width': '100%',
+              'height': $(window).height() - 100, // 设置高度为屏幕高度
+            });
           }
+        }  
       });
 
       $('.gallery-link').on('click', function () {

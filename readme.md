@@ -30,6 +30,7 @@ TODO
 -[] BUG: 移动端 load more 后，图片有边影
 -[x] BUG: 移动端 everything 筛选框样式有问题
 -[] BUG: brand logo 在黑色主题下太暗
+-[] BUG: 压缩时，works title 被挤压
 
 ===
 
