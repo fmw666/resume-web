@@ -1119,6 +1119,13 @@ section.home.light .social-icons li a:hover {
   gap: 1.5rem;
 }
 
+.about .mbti-text {
+  font-size: xx-large;
+  font-weight: bold;
+  outline-style: dotted;
+  margin-top: 30px;
+}
+
 /*=================================================================*/
 /*                      SKILLS                              
 /*=================================================================*/
