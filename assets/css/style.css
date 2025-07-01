@@ -70,10 +70,12 @@
 * {
   margin: 0;
   padding: 0;
+  /* transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out !important; */
+  transition: all 0.3s ease-in-out !important;
   /* cursor: url(https://ani.cursors-4u.net/nature/nat-11/nat1042.ani), url(https://ani.cursors-4u.net/nature/nat-11/nat1037.png), auto !important; */
   cursor: url(https://cur.cursors-4u.net/nature/nat-10/nat922.ani), url(https://cur.cursors-4u.net/nature/nat-10/nat922.png), auto !important;
 }
-/* Start https://www.cursors-4u.com */ * {} /* End https://www.cursors-4u.com */
+/* Start https://www.cursors-4u.com */  /* End https://www.cursors-4u.com */
 
 html {
   margin: 0 !important;
