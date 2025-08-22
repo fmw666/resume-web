@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="assets/css/animate.css" type="text/css" media="all">
   <link rel="stylesheet" href="assets/css/magnific-popup.css" type="text/css" media="all">
   <link rel="stylesheet" href="assets/css/style.css" type="text/css" media="all">
+
 </head>
 
 <body>
@@ -236,7 +237,7 @@
             <div class="col-md-6">
               <!-- about text -->
               <p id="about-introduce">📢 Hi! I'm Austin, a full-stack developer with a wealth of experience in web application design, development, and customization. I'm proficient in Python, Golang, React, and AWS, and am adept at providing high-quality, rapid custom solutions to clients. My expertise also lies in deployment and delivery, ensuring projects are efficiently brought to fruition.</p>
-              <div class="mt-3 flex">
+              <div class="mt-3 flex" id="resume-buttons">
                 <a href="assets/Austin_resume.pdf" download id="download-cv-btn" class="btn btn-default light">Resume&ensp;<i class="fas fa-download"></i></a>
                 <a href="assets/Austin_resume.pdf" class="work-video">Online view&ensp;<i class="fas fa-eye"></i></a>
               </div>
@@ -417,7 +418,7 @@
 </section>
 
 <!-- section experience -->
-<section id="experience" class="light">
+<section id="experience" class="light" id="experience-section">
   <div class="container">
 
     <!-- section title -->
@@ -859,13 +860,9 @@
 </main>
 
 <!-- Chatbot widget -->
-<div id="chatbot-widget"><i class="fas fa-comment-dots"></i></div>
-<div class="chatbot-content">
-  <iframe
-    src="https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/18/03/20241218031200-KGZRSIIW.json&_gl=1*nkz0bb*_ga*Mzk1OTQ4MDIuMTczNTI5NzE3NA..*_ga_HKHSWES9V9*MTczNTMwNTQ0NC4yLjEuMTczNTMwNTUzNi4zNy4wLjc1ODcwODcyNg.."
-    frameborder="0"
-    allow="microphone">
-  </iframe>
+<div id="chatbot-widget" aria-busy="true" aria-label="Chat with bot" title="Chatbot" style="opacity: 0; visibility: hidden;"><i class="fas fa-robot"></i></div>
+<div class="chatbot-content" id="chatbot-container">
+  <div class="chatbot-placeholder">机器人正在加载…</div>
 </div>
 
 <!-- Go to top button -->
@@ -888,6 +885,136 @@
 <script src="assets/js/parallax.min.js"></script>
 <script src="assets/js/jquery.magnific-popup.min.js"></script>
 <script src="assets/js/custom.js"></script>
+<!-- lazy chatbot script -->
+<script>
+  (function() {
+    var widget = document.getElementById('chatbot-widget');
+    var container = document.getElementById('chatbot-container');
+    var iframe = null;
+    var isReady = false;
+    var isOpen = false;
+    var isPageLoaded = false;
+
+    function showWidget() {
+      if (widget) {
+        widget.style.opacity = '1';
+        widget.style.visibility = 'visible';
+        widget.style.transition = 'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out';
+      }
+    }
+
+    function showContainer(show) {
+      if (!container) return;
+      if (show) { container.classList.add('visible'); }
+      else { container.classList.remove('visible'); }
+    }
+
+    function createIframe() {
+      if (iframe) return iframe;
+      iframe = document.createElement('iframe');
+      iframe.className = 'chatbot-iframe';
+      iframe.allow = 'microphone';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.src = 'https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/18/03/20241218031200-KGZRSIIW.json&_gl=1*nkz0bb*_ga*Mzk1OTQ4MDIuMTczNTI5NzE3NA..*_ga_HKHSWES9V9*MTczNTMwNTQ0NC4yLjEuMTczNTMwNTUzNi4zNy4wLjc1ODcwODcyNg..';
+      iframe.addEventListener('load', function() {
+        isReady = true;
+        widget && widget.setAttribute('aria-busy', 'false');
+        var ph = container.querySelector('.chatbot-placeholder');
+        if (ph) ph.remove();
+        if (isOpen) showContainer(true);
+      });
+      container.appendChild(iframe);
+      return iframe;
+    }
+
+    function scheduleLoad() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(createIframe, { timeout: 3000 });
+      } else if (document.readyState === 'complete') {
+        setTimeout(createIframe, 0);
+      } else {
+        window.addEventListener('load', function() { setTimeout(createIframe, 0); });
+      }
+    }
+
+    function waitForPageLoad() {
+      // 等待页面完全加载
+      if (document.readyState === 'complete') {
+        isPageLoaded = true;
+        // 额外等待一小段时间确保所有内容都渲染完成
+        setTimeout(showWidget, 500);
+      } else {
+        window.addEventListener('load', function() {
+          isPageLoaded = true;
+          setTimeout(showWidget, 500);
+        });
+      }
+    }
+
+    if (widget) {
+      widget.addEventListener('click', function() {
+        if (!iframe) createIframe();
+        if (!isReady) return; // not ready yet
+        isOpen = !isOpen;
+        showContainer(isOpen);
+      });
+    }
+
+    // 先等待页面加载完成
+    waitForPageLoad();
+    // 然后安排iframe加载
+    scheduleLoad();
+  })();
+</script>
+
+<!-- URL parameter control script -->
+<script>
+  (function() {
+    // 获取URL参数
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // 检查code参数
+    function checkCodeParameter() {
+      var code = getUrlParameter('code');
+      
+      // 如果code不等于990718，则隐藏相关元素
+      if (code !== '990718') {
+        // 隐藏简历按钮
+        var resumeButtons = document.getElementById('resume-buttons');
+        if (resumeButtons) {
+          resumeButtons.style.display = 'none';
+        }
+        
+        // 隐藏Experience部分
+        var experienceSection = document.getElementById('experience');
+        if (experienceSection) {
+          experienceSection.style.display = 'none';
+        }
+        
+        // 隐藏导航菜单中的Experience链接
+        var experienceNavLink = document.querySelector('a[href="#experience"]');
+        if (experienceNavLink) {
+          var navItem = experienceNavLink.closest('li');
+          if (navItem) {
+            navItem.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // 页面加载完成后执行
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkCodeParameter);
+    } else {
+      checkCodeParameter();
+    }
+  })();
+</script>
 
 </body>
 </html>

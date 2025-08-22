@@ -459,7 +459,7 @@ header.desktop-header-1 {
   height: 100vh;
   min-height: 100vh;
   top: 0;
-  width: 290px;
+  width: 230px;
   z-index: 1;
   -webkit-transform: translateX(0);
   -ms-transform: translateX(0);
@@ -741,9 +741,9 @@ header.mobile-header-1 {
   transition: all 0.3s ease-in-out;
 }
 header.mobile-header-1.open {
-  -webkit-transform: translateX(290px);
-  -ms-transform: translateX(290px);
-  transform: translateX(290px);
+  -webkit-transform: translateX(230px);
+  -ms-transform: translateX(230px);
+  transform: translateX(230px);
 }
 header.mobile-header-1 .menu-icon button {
   background: transparent;
@@ -924,7 +924,7 @@ header.mobile-header-2 .site-logo img {
 /*                      SECTIONS                             
 /*=================================================================*/
 main.content {
-  margin-left: 290px;
+  margin-left: 230px;
   -webkit-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
@@ -935,9 +935,9 @@ main.content.light {
 }
 main.content.open {
   opacity: 0.8;
-  -webkit-transform: translateX(290px);
-  -ms-transform: translateX(290px);
-  transform: translateX(290px);
+  -webkit-transform: translateX(230px);
+  -ms-transform: translateX(230px);
+  transform: translateX(230px);
 }
 
 main.content-2 {
@@ -2445,6 +2445,7 @@ body.dark .blog-page-section .blog-single {
   left: -200px;
   transform: translateY(-50%);
   opacity: 0;
+  visibility: hidden;
   transition: all 0.3s ease-in-out;
   padding: 10px;
   background: rgba(255, 255, 255, 0.6);
@@ -2459,6 +2460,7 @@ body.dark .blog-page-section .blog-single {
 .social-icons #wechat-link:hover .wechat-qrcode {
   left: -20px;
   opacity: 1;
+  visibility: visible;
 }
 /* 小屏幕 (例如：宽度小于768px) 时调整位置 */
 @media (max-width: 768px) {
@@ -2473,22 +2475,43 @@ body.dark .blog-page-section .blog-single {
 /* === ChatBot widget === */
 #chatbot-widget {
   position: fixed;
-  bottom: 100px;
+  bottom: 90px;
   right: 25px;
   z-index: 9999;
   width: 40px;
   height: 40px;
-  background: rgba(252, 252, 253, .9);
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background: #FF4C60;
+  border-radius: 50%;
+  box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9, 7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: none;
+  outline: none;
+  transform-origin: center;
+}
+
+#chatbot-widget:hover {
+  transform: scale(0.95);
+  box-shadow: -4px -4px 10px 0px #fff9, -2px -2px 3px 0px #fff9, 4px 4px 10px 0px #0002, 2px 2px 3px 0px #0001;
+}
+
+#chatbot-widget[aria-busy="true"] {
+  background: #e64456;
+  animation: chatbot-pulse 2s infinite;
+}
+
+@keyframes chatbot-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 #chatbot-widget i {
-  color: #FF4C60;
-  font-size: 25px;
+  color: #fff;
+  font-size: 18px;
 }
 
 .chatbot-content {
@@ -2500,22 +2523,73 @@ body.dark .blog-page-section .blog-single {
   height: 0;
   transition: all 0.3s ease-in-out;
   width: 500px;
-  z-index: 9999;
-  border-radius: 10px;
-  background: rgb(252, 252, 253);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9998;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px 0 rgba(44, 44, 84, 0.10), 0 2px 8px 0 rgba(44, 44, 84, 0.08), 0 8px 32px 0 rgba(44, 44, 84, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.chatbot-content.visible {
+  opacity: 1;
+  height: 600px;
+}
+
 .chatbot-content.show {
   opacity: 1;
   height: 600px;
 }
+
+.chatbot-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #5E5C7F;
+  background: #e0e5ec;
+  font-family: "Rubik", sans-serif;
+}
+
+.chatbot-iframe {
+  width: 90%;
+  height: 95%;
+  border: 0;
+  display: block;
+}
+
 .chatbot-content iframe {
   width: 90%;
   height: 95%;
-  /* border-radius: 10px; */
+  border: 0;
+  display: block;
+}
+
+/* Dark theme styles for chatbot */
+body.dark #chatbot-widget {
+  background: #FF4C60;
+  box-shadow: -7px -7px 20px 0px rgba(255, 255, 255, 0.1), -4px -4px 5px 0px rgba(255, 255, 255, 0.05), 7px 7px 20px 0px rgba(0, 0, 0, 0.3), 4px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  transform-origin: center;
+}
+
+body.dark #chatbot-widget:hover {
+  box-shadow: -4px -4px 10px 0px rgba(255, 255, 255, 0.1), -2px -2px 3px 0px rgba(255, 255, 255, 0.05), 4px 4px 10px 0px rgba(0, 0, 0, 0.3), 2px 2px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+body.dark #chatbot-widget[aria-busy="true"] {
+  background: #e64456;
+}
+
+body.dark .chatbot-content {
+  box-shadow: -7px -7px 20px 0px rgba(255, 255, 255, 0.1), -4px -4px 5px 0px rgba(255, 255, 255, 0.05), 7px 7px 20px 0px rgba(0, 0, 0, 0.3), 4px 4px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .chatbot-placeholder {
+  color: #fff;
+  background: #302f4e;
 }
 
 /* 小屏幕 (例如：宽度小于768px) 时调整位置 */
@@ -2954,9 +3028,9 @@ body {
 }
 @media only screen and (max-width: 991px) {
   header.desktop-header-1 {
-    -webkit-transform: translateX(-290px);
-    -ms-transform: translateX(-290px);
-    transform: translateX(-290px);
+    -webkit-transform: translateX(-230px);
+    -ms-transform: translateX(-230px);
+    transform: translateX(-230px);
   }
 
   header.mobile-header-1 {
