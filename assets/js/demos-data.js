@@ -7,7 +7,7 @@ var DEMOS = [
     images: [
       "assets/images/works/designgpt.png",
       "assets/images/works/designgpt/designgpt-adi-01.png",
-      "assets/images/works/designgpt/designgpt-adi-02.png"
+      "assets/images/works/designgpt/designgpt-adi-02.gif"
     ],
     videos: [],
     url: "https://www.designgpt.art/"
@@ -20,12 +20,12 @@ var DEMOS = [
     images: [
       "assets/images/works/duby/duby-01.png",
       "assets/images/works/duby/duby-02.png",
-      "assets/images/works/duby/duby-03.png",
-      "assets/images/works/duby/duby-04.png",
-      "assets/images/works/duby/duby-05.png"
+      "assets/images/works/duby/duby-03.gif",
+      "assets/images/works/duby/duby-04.gif",
+      "assets/images/works/duby/duby-05.gif"
     ],
     videos: [],
-    url: null
+    url: "https://duby.so/"
   },
   {
     id: "distilgent",
@@ -33,11 +33,11 @@ var DEMOS = [
     desc: "Distill your expertise into AI Agents — your digital doublets working the marketplace.",
     badge: "AI",
     images: [
-      "assets/images/works/distilgent/distilgent-01.png",
+      "assets/images/works/distilgent/distilgent-01.gif",
       "assets/images/works/distilgent/distilgent-02.png"
     ],
     videos: [],
-    url: null
+    url: "https://distilgent.vercel.app/"
   },
   {
     id: "aidevkit",
@@ -49,7 +49,7 @@ var DEMOS = [
       "assets/images/works/aidevkit/aidevkit-gif-01.png"
     ],
     videos: [],
-    url: null
+    url: "https://aidevkit-ashen.vercel.app/"
   },
   {
     id: "prose",
@@ -60,7 +60,7 @@ var DEMOS = [
       "assets/images/works/prose/prose-01.png",
       "assets/images/works/prose/prose-02.png"
     ],
-    videos: [],
+    videos: ["assets/videos/works/prose/prose-01.mp4"],
     url: null
   },
   {

@@ -3222,15 +3222,29 @@ body:not(.dark) section#projects .demo-masonry-item:hover {
 }
 .dv-media {
   display: none;
-  max-width: 100%;
+  max-width: 90vw;
   max-height: 86vh;
   border-radius: 6px;
   object-fit: contain;
   box-shadow: 0 8px 60px rgba(0,0,0,.5);
-  transition: opacity .3s ease !important;
+  transition: none !important;
+  cursor: zoom-in;
 }
 .dv-media.is-active {
   display: block;
+}
+.dv-main.is-zoomed {
+  overflow: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+  cursor: zoom-out;
+}
+.dv-main.is-zoomed .dv-media {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+  border-radius: 0;
+  box-shadow: none;
 }
 .dv-video.is-active {
   display: block;

@@ -6,6 +6,7 @@
   var viewer = document.getElementById('project-viewer');
   if (!grid || !viewer) return;
 
+  var dvMain = viewer.querySelector('.dv-main');
   var dvImg = viewer.querySelector('.dv-img');
   var dvVideo = viewer.querySelector('.dv-video');
   var dvTitle = viewer.querySelector('.dv-info-title');
@@ -112,12 +113,16 @@
     var m = mediaList[index];
     if (!m) return;
 
-    dvImg.classList.remove('is-active');
-    dvVideo.classList.remove('is-active');
     dvVideo.pause();
     dvVideo.removeAttribute('src');
+    dvImg.classList.remove('is-active');
+    dvVideo.classList.remove('is-active');
+
+    exitZoom();
 
     if (m.type === 'image') {
+      dvImg.removeAttribute('src');
+      void dvImg.offsetHeight;
       dvImg.src = m.src;
       dvImg.classList.add('is-active');
     } else {
@@ -159,12 +164,21 @@
     }
   }
 
+  function toggleZoom() {
+    dvMain.classList.toggle('is-zoomed');
+  }
+
+  function exitZoom() {
+    dvMain.classList.remove('is-zoomed');
+  }
+
   function closeViewer() {
     viewer.classList.remove('is-open');
     document.body.style.overflow = '';
     dvVideo.pause();
     dvVideo.removeAttribute('src');
     dvImg.removeAttribute('src');
+    exitZoom();
     clearArcTimer();
     hideArc();
     currentDemo = null;
@@ -281,6 +295,7 @@
   // ─── 4. Event bindings ─────────────────────────────────
   dvClose.addEventListener('click', closeViewer);
   viewer.querySelector('.dv-backdrop').addEventListener('click', closeViewer);
+  dvImg.addEventListener('click', function (e) { e.stopPropagation(); toggleZoom(); });
   dvPrev.addEventListener('click', function (e) { e.stopPropagation(); navPrev(); });
   dvNext.addEventListener('click', function (e) { e.stopPropagation(); navNext(); });
 
