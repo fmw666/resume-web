@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/slick.css" type="text/css" media="all">
   <link rel="stylesheet" href="assets/css/animate.css" type="text/css" media="all">
   <link rel="stylesheet" href="assets/css/magnific-popup.css" type="text/css" media="all">
-  <link rel="stylesheet" href="assets/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260410" type="text/css" media="all">
 
 </head>
 
@@ -88,6 +88,7 @@
       <li><a href="#services"><i class="icon-briefcase"></i>Services</a></li>
       <li><a href="#experience"><i class="icon-graduation"></i>Experience</a></li>
       <li><a href="#works"><i class="icon-layers"></i>Works</a></li>
+      <li><a href="#projects"><i class="icon-screen-desktop"></i>Projects</a></li>
       <li><a href="#blog"><i class="icon-note"></i>Blog</a></li>
       <li><a href="#contact"><i class="icon-bubbles"></i>Contact</a></li>
     </ul>
@@ -719,6 +720,15 @@
   </div>
 </section>
 
+<!-- section demos -->
+<section id="projects">
+  <div class="container">
+    <h2 class="section-title wow fadeInUp">Full-Stack Design Projects</h2>
+    <div class="spacer" data-height="60"></div>
+    <div id="project-grid" class="demo-masonry"></div>
+  </div>
+</section>
+
 <!-- section blog -->
 <section id="blog" class="light">
   <div class="container">
@@ -884,6 +894,29 @@
 <script src="assets/js/morphext.min.js"></script>
 <script src="assets/js/parallax.min.js"></script>
 <script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- Demo fullscreen viewer -->
+<div id="project-viewer" class="dv">
+  <div class="dv-backdrop"></div>
+  <div class="dv-main">
+    <img class="dv-media dv-img" alt="" />
+    <video class="dv-media dv-video" controls></video>
+  </div>
+  <div class="dv-info">
+    <h3 class="dv-info-title"></h3>
+    <p class="dv-info-desc"></p>
+    <a class="dv-info-link" target="_blank"><i class="fas fa-external-link-alt"></i> <span></span></a>
+  </div>
+  <button class="dv-close" aria-label="Close"><i class="fas fa-times"></i></button>
+  <button class="dv-nav dv-prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+  <button class="dv-nav dv-next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+  <div class="dv-arc-trigger"></div>
+  <div class="dv-arc-panel">
+    <div class="dv-arc-list"></div>
+  </div>
+</div>
+
+<script src="assets/js/demos-data.js"></script>
+<script src="assets/js/demo-viewer.js"></script>
 <script src="assets/js/custom.js"></script>
 <!-- lazy chatbot script -->
 <script>
