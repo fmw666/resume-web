@@ -2041,6 +2041,9 @@ body.dark .blog-page-section {
 body.dark .bg-white {
   background-color: #353353 !important;
 }
+body.dark section#projects {
+  background: #353353;
+}
 body.dark .blog-standard .meta li a, body.dark .blog-standard .title a, body.dark .comment-author .fn {
   color: #fff;
 }
@@ -3164,16 +3167,30 @@ body.dark .section-subtitle {
   font-size: .65rem;
 }
 
-/*----- Frame: light mode -----*/
-section#projects.light .demo-masonry-item,
-body:not(.dark) section#projects .demo-masonry-item {
+/*----- Light mode -----*/
+body:not(.dark) .demo-masonry-item {
   background: linear-gradient(145deg, rgba(255,255,255,.7), rgba(240,240,245,.4));
   border-color: rgba(0,0,0,.08);
   box-shadow: 0 2px 12px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.9);
 }
-body:not(.dark) section#projects .demo-masonry-item:hover {
+body:not(.dark) .demo-masonry-item:hover {
   border-color: rgba(0,0,0,.14);
   box-shadow: 0 8px 30px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,1);
+}
+body:not(.dark) .demo-card {
+  background: #f5f5fa;
+}
+body:not(.dark) .demo-card-overlay {
+  background: linear-gradient(0deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,.35) 42%,transparent 66%);
+}
+body:not(.dark) .demo-card:hover .demo-card-overlay {
+  background: linear-gradient(0deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.45) 50%,rgba(255,255,255,.05) 100%);
+}
+body:not(.dark) .demo-title {
+  color: #353353;
+}
+body:not(.dark) .demo-desc {
+  color: rgba(53,51,83,.72);
 }
 
 /*----- Masonry Responsive -----*/
