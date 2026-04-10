@@ -1,12 +1,82 @@
 var DEMOS = [
   {
     id: "designgpt-v3",
-    title: "DesignGPT V3",
+    title: "DesignGPT V3 (ADI)",
     desc: "AI-powered interior design — describe your dream room and watch it come to life.",
     badge: "AIGC",
-    images: ["assets/images/works/designgpt.png"],
+    images: [
+      "assets/images/works/designgpt.png",
+      "assets/images/works/designgpt/designgpt-adi-01.png",
+      "assets/images/works/designgpt/designgpt-adi-02.png"
+    ],
     videos: [],
     url: "https://www.designgpt.art/"
+  },
+  {
+    id: "duby-voice",
+    title: "Duby Voice",
+    desc: "Professional AI dubbing platform — realistic voice synthesis with 30+ language support.",
+    badge: "AI",
+    images: [
+      "assets/images/works/duby/duby-01.png",
+      "assets/images/works/duby/duby-02.png",
+      "assets/images/works/duby/duby-03.png",
+      "assets/images/works/duby/duby-04.png",
+      "assets/images/works/duby/duby-05.png"
+    ],
+    videos: [],
+    url: null
+  },
+  {
+    id: "distilgent",
+    title: "DistilAgent",
+    desc: "Distill your expertise into AI Agents — your digital doublets working the marketplace.",
+    badge: "AI",
+    images: [
+      "assets/images/works/distilgent/distilgent-01.png",
+      "assets/images/works/distilgent/distilgent-02.png"
+    ],
+    videos: [],
+    url: null
+  },
+  {
+    id: "aidevkit",
+    title: "AI DevKit",
+    desc: "AI development toolkit — a clear and extensible architecture for rapid AI app development.",
+    badge: "AI",
+    images: [
+      "assets/images/works/aidevkit/aidevkit-01.png",
+      "assets/images/works/aidevkit/aidevkit-gif-01.png"
+    ],
+    videos: [],
+    url: null
+  },
+  {
+    id: "prose",
+    title: "Prose",
+    desc: "Card-based AI document assistant — drag, combine, and transform content with smart cards.",
+    badge: "AI",
+    images: [
+      "assets/images/works/prose/prose-01.png",
+      "assets/images/works/prose/prose-02.png"
+    ],
+    videos: [],
+    url: null
+  },
+  {
+    id: "sdc",
+    title: "SDC Game System",
+    desc: "Delta Force game inventory & marketplace system — backpack, trading, and gacha mechanics.",
+    badge: "Game",
+    images: [
+      "assets/images/works/sdc/sdc-01.png",
+      "assets/images/works/sdc/sdc-02.png",
+      "assets/images/works/sdc/sdc-03.png",
+      "assets/images/works/sdc/sdc-04.png",
+      "assets/images/works/sdc/sdc-05.png"
+    ],
+    videos: [],
+    url: null
   },
   {
     id: "designgpt-v2",
