@@ -3,7 +3,7 @@
 将多个 html 组合为一个 index.html 文件
 """
 
-sections = ["home", "about", "services", "experience", "works", "projects", "blog", "contact"]
+sections = ["home", "agent", "about", "services", "experience", "works", "projects", "blog", "contact"]
 
 
 specified_row = '<main class="content light" id="main">'
