@@ -598,4 +598,53 @@ $(function(){
         }, 400);
     });
 
+    /*=========================================================================
+     For-Your-Agent: copy skill link to clipboard
+     =========================================================================*/
+    (function() {
+        var AGENT_URL = 'https://maovo.site/austion-skill.md';
+        var $btn = $('#agent-copy-btn');
+        var $urlBox = $('#agent-url');
+        if (!$btn.length && !$urlBox.length) return;
+
+        function fallbackCopy(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        function doCopy() {
+            var p;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                p = navigator.clipboard.writeText(AGENT_URL).catch(function() {
+                    fallbackCopy(AGENT_URL);
+                });
+            } else {
+                fallbackCopy(AGENT_URL);
+                p = Promise.resolve();
+            }
+            return Promise.resolve(p);
+        }
+
+        function flashCopied() {
+            $btn.addClass('is-copied');
+            setTimeout(function() { $btn.removeClass('is-copied'); }, 1800);
+        }
+
+        $btn.on('click', function(e) {
+            e.preventDefault();
+            doCopy().then(flashCopied);
+        });
+
+        $urlBox.on('click', function(e) {
+            e.preventDefault();
+            doCopy().then(flashCopied);
+        });
+    })();
+
 });
