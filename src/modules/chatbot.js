@@ -1,11 +1,15 @@
 /**
  * Chatbot：Botpress iframe 懒加载。
  *
- * 只有在 Widget 被点击或浏览器 idle 时才创建 iframe，避免首屏阻塞。
+ * 性能要点：
+ *   - `whenIdle` 在浏览器空闲时才 attach iframe，不阻塞首屏；
+ *   - iframe 的 src 从 `config/endpoints.botpress` 拿，便于灰度/替换；
+ *   - 用户点击 widget 时立刻拉起（哪怕还没 idle 到），让"点我就开"这
+ *     条最关键的路径不被"等 idle"拖慢。
  */
-
-const BOTPRESS_SRC =
-  'https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/18/03/20241218031200-KGZRSIIW.json';
+import { ENDPOINTS, TIMINGS } from '../config/index.js';
+import { whenIdle } from '../core/schedule.js';
+import { onWindowLoad } from '../core/lifecycle.js';
 
 export function initChatbot() {
   const widget = document.getElementById('chatbot-widget');
@@ -33,7 +37,8 @@ export function initChatbot() {
     iframe.className = 'chatbot-iframe';
     iframe.allow = 'microphone';
     iframe.referrerPolicy = 'no-referrer-when-downgrade';
-    iframe.src = BOTPRESS_SRC;
+    iframe.loading = 'lazy';
+    iframe.src = ENDPOINTS.botpress;
     iframe.addEventListener('load', () => {
       isReady = true;
       widget.setAttribute('aria-busy', 'false');
@@ -45,24 +50,6 @@ export function initChatbot() {
     return iframe;
   }
 
-  function scheduleLoad() {
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(createIframe, { timeout: 3000 });
-    } else if (document.readyState === 'complete') {
-      setTimeout(createIframe, 0);
-    } else {
-      window.addEventListener('load', () => setTimeout(createIframe, 0));
-    }
-  }
-
-  function waitForPageLoad() {
-    if (document.readyState === 'complete') {
-      setTimeout(showWidget, 500);
-    } else {
-      window.addEventListener('load', () => setTimeout(showWidget, 500));
-    }
-  }
-
   widget.addEventListener('click', () => {
     if (!iframe) createIframe();
     if (!isReady) return;
@@ -70,6 +57,6 @@ export function initChatbot() {
     showContainer(isOpen);
   });
 
-  waitForPageLoad();
-  scheduleLoad();
+  onWindowLoad(() => setTimeout(showWidget, TIMINGS.chatbotRevealDelayMs));
+  whenIdle(createIframe, { timeout: TIMINGS.chatbotIdleTimeoutMs });
 }

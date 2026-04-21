@@ -1,17 +1,15 @@
 /**
  * 通过 URL 参数 `?code=xxx` 控制敏感信息展示（简历下载、Experience）。
  */
-
-const SECRET = '990718';
+import { ACCESS } from '../config/index.js';
 
 function getQueryParam(name) {
-  const search = new URLSearchParams(window.location.search);
-  return search.get(name) || '';
+  return new URLSearchParams(window.location.search).get(name) || '';
 }
 
 export function enforcePrivacy() {
-  const code = getQueryParam('code');
-  if (code === SECRET) return;
+  const code = getQueryParam(ACCESS.privacyParamName);
+  if (code === ACCESS.privacyCode) return;
 
   const resumeButtons = document.getElementById('resume-buttons');
   if (resumeButtons) resumeButtons.style.display = 'none';

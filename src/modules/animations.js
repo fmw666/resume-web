@@ -1,31 +1,24 @@
 /**
  * 通用动画初始化：WOW / Morphext / Parallax / Counterup / Skill bar。
  *
- * 为了保持对老版 jQuery 插件（Morphext / Counterup / Waypoints / WOW /
+ * 为保持对老版 jQuery 插件（Morphext / Counterup / Waypoints / WOW /
  * Parallax …）的零回归，这些 vendor 脚本通过动态 <script> 注入（见
- * loadVendorScripts），而不是 ES import。npm 只用于锁定依赖版本，便于
- * 未来升级时有迹可循。
+ * `core/vendor-loader.js`），而不是 ES import。npm 只用于锁定依赖版本，
+ * 便于未来升级时有迹可循。
+ *
+ * vendor 清单、超时等由 `config/index.js` 集中管理。
  */
 import $ from 'jquery';
-import { loadVendorScripts } from './vendor-loader.js';
-
-const VENDORS = [
-  '/assets/js/popper.min.js',
-  '/assets/js/bootstrap.min.js',
-  '/assets/js/jquery.easing.min.js',
-  '/assets/js/jquery.waypoints.min.js',
-  '/assets/js/jquery.counterup.min.js',
-  '/assets/js/morphext.min.js',
-  '/assets/js/wow.min.js',
-  '/assets/js/parallax.min.js',
-];
+import { VENDORS } from '../config/index.js';
+import { loadVendorScripts } from '../core/vendor-loader.js';
 
 export async function loadCoreVendors() {
-  await loadVendorScripts(VENDORS);
+  await loadVendorScripts(VENDORS.core);
 }
 
 export function initWow() {
   if (typeof window.WOW === 'undefined') return;
+  // 让主线程先把 sections 布局画出来再起 WOW，避免首屏视觉抖动
   setTimeout(() => { new window.WOW().init(); }, 0);
 }
 
@@ -72,7 +65,3 @@ export function initSkillBars() {
     offset: '50%',
   });
 }
-
-// `applyDataAttrs` 以前住在这里，但它跟动画无关。已挪到 `./dom-utils.js`。
-// 为保持 `main.js` 的 `import { applyDataAttrs } from './animations.js'`
-// 这种老路径短期内不被破坏（现已同步更新），这里不再重新导出。

@@ -1,13 +1,13 @@
 /**
  * For-Your-Agent：点击 Copy 按钮把"读 skill.md 的 prompt"复制到剪贴板。
  *
- * 迁自原 custom.js。优先用 async Clipboard API，失败或不支持时降级到
+ * 优先用 async Clipboard API，失败或不支持时降级到
  * `document.execCommand('copy')`。
  */
 import $ from 'jquery';
+import { ENDPOINTS, TIMINGS } from '../config/index.js';
 
-const AGENT_URL = 'https://maovo.site/austion-skill.md';
-const AGENT_PROMPT = `read ${AGENT_URL} and help me get to know Austin, this independent developer`;
+const AGENT_PROMPT = `read ${ENDPOINTS.agentSkill} and help me get to know Austin, this independent developer`;
 
 function fallbackCopy(text) {
   const ta = document.createElement('textarea');
@@ -19,7 +19,7 @@ function fallbackCopy(text) {
   try {
     document.execCommand('copy');
   } catch (_) {
-    // ignore
+    // 忽略：已经是最后一道降级，失败也不再继续处理
   }
   document.body.removeChild(ta);
 }
@@ -39,7 +39,7 @@ export function initAgentCopy() {
 
   function flashCopied() {
     $btn.addClass('is-copied');
-    setTimeout(() => $btn.removeClass('is-copied'), 1800);
+    setTimeout(() => $btn.removeClass('is-copied'), TIMINGS.agentCopyFlashMs);
   }
 
   $btn.on('click', (e) => {
@@ -49,7 +49,6 @@ export function initAgentCopy() {
   });
 
   $promptBox.on('click', (e) => {
-    // allow the inner <a> (link to austion-skill.md) to work normally
     if (e.target && e.target.closest && e.target.closest('a')) return;
     e.preventDefault();
     doCopy(AGENT_PROMPT).then(flashCopied);

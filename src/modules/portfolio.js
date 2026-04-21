@@ -1,26 +1,25 @@
 /**
  * Works 区块：Isotope 过滤 + Magnific Popup + Infinite Scroll（加载第二页）。
  *
- * 性能策略：这些插件比较重，所以用 IntersectionObserver 懒加载 —— 只有当
- * #works 进入可视范围时才 import 执行。对首屏渲染非常友好。
+ * 性能策略：这些插件比较重，所以用 `whenVisible` 懒加载 —— 只有当
+ * #works 进入可视范围时才下载 + 执行。对首屏渲染非常友好。
  */
 import $ from 'jquery';
+import { VENDORS, LAZY } from '../config/index.js';
+import { loadVendorScripts } from '../core/vendor-loader.js';
+import { whenVisible } from '../core/lazy.js';
 
 let initialized = false;
 let modulePromise = null;
 
-import { loadVendorScripts } from './vendor-loader.js';
-
 async function loadDeps() {
   if (modulePromise) return modulePromise;
   modulePromise = (async () => {
-    await loadVendorScripts([
-      '/assets/js/imagesloaded.pkgd.min.js',
-      '/assets/js/isotope.pkgd.min.js',
-      '/assets/js/jquery.magnific-popup.min.js',
-      '/assets/js/infinite-scroll.min.js',
+    // vendor 脚本串行（依赖顺序敏感），但与 works-page-2 的动态 import 并行。
+    const [, worksPage2Module] = await Promise.all([
+      loadVendorScripts(VENDORS.portfolio),
+      import('../sections/works-page-2.html?raw'),
     ]);
-    const worksPage2Module = await import('../sections/works-page-2.html?raw');
     return { worksPage2Html: worksPage2Module.default };
   })();
   return modulePromise;
@@ -32,7 +31,6 @@ async function init() {
 
   await loadDeps();
 
-  // ------- Isotope filter buttons -------
   const $container = $('.portfolio-wrapper');
 
   $('.portfolio-filter').on('click', 'li', function () {
@@ -59,7 +57,6 @@ async function init() {
   bindPopups();
   bindInfiniteScroll($container);
 
-  // 移动端下拉筛选
   $('.portfolio-filter-mobile').on('change', function () {
     $container.isotope({ filter: this.value });
   });
@@ -147,7 +144,7 @@ async function bindInfiniteScroll($container) {
   const pagesNum = $('.portfolio-pagination').find('li a:last').text();
 
   if (typeof $container.infinitescroll !== 'function') {
-    // vendor infinite-scroll 没能挂上去，直接改为点击按钮一次性注入第二页
+    // vendor infinite-scroll 缺席：降级为点击按钮一次性注入第二页。
     $('.load-more .btn').on('click', function () {
       $container.append(worksPage2Html);
       $container.imagesLoaded(() => {
@@ -214,23 +211,8 @@ async function bindInfiniteScroll($container) {
 }
 
 export function initPortfolioLazy() {
-  const el = document.getElementById('works');
-  if (!el) return;
-
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            io.disconnect();
-            init();
-          }
-        });
-      },
-      { rootMargin: '300px' },
-    );
-    io.observe(el);
-  } else {
-    init();
-  }
+  whenVisible('#works', init, {
+    rootMargin: LAZY.portfolioRootMargin,
+    label: 'portfolio',
+  });
 }
