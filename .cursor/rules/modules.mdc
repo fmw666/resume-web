@@ -1,0 +1,98 @@
+---
+description: Rules for authoring or modifying business modules, core infrastructure, and the boot pipeline
+globs: src/main.js,src/modules/**/*.js,src/core/**/*.js,src/config/**/*.js
+alwaysApply: false
+---
+
+# Module authoring standards
+
+These rules apply whenever you touch `src/main.js`, `src/modules/**`,
+`src/core/**`, or `src/config/**`.
+
+## Adding a new business module — canonical recipe
+
+1. Create `src/modules/<name>.js` exporting a single `initXxx()` function.
+2. Put any constants it uses into `src/config/index.js` (under the right
+   frozen group). **Do not** inline URLs / thresholds / timings in the module.
+3. Register it in `src/main.js` with the correct phase:
+   - Pure DOM setup, no vendor deps → `PHASES.POST_MOUNT`
+   - Needs bootstrap/waypoints/etc. → `PHASES.ENHANCE`
+   - Heavy / third-party / below-the-fold → `PHASES.DEFER`
+   - Sections-injection only belongs in `PHASES.MOUNT`
+   - Pre-DOM-injection work only belongs in `PHASES.PRE_MOUNT`
+4. Update `scripts/check-structure.mjs`: add the file to `REQUIRED_MODULES`
+   and the `main.js` import assertion list.
+5. If it renders UI, add at least one assertion to `scripts/smoke.mjs`.
+
+## What a module MUST NOT do
+
+- **Don't throw from `init*`.** Log via `createLogger('tag').warn/error`
+  and return. Pipeline-level `safeRun` catches throws, but swallowing
+  errors silently hides regressions.
+- **Don't start `await`-ing at module top level.** Side-effectful work
+  goes inside the exported `init*` function so the pipeline controls timing.
+- **Don't directly call `document.addEventListener('DOMContentLoaded', …)`.**
+  The pipeline already guarantees DOM readiness before `POST_MOUNT`.
+- **Don't import from another business module.** Cross-module coupling
+  goes through `core/` utilities or via DOM events
+  (e.g. `theme-change` CustomEvent).
+- **Don't import from `core/` internals sideways inside `core/`.** Keep
+  `core/` a flat, non-circular dependency graph.
+
+## Lazy loading — always use the helper
+
+```js
+import { whenVisible } from '../core/lazy.js';
+import { LAZY } from '../config/index.js';
+
+export function initThingLazy() {
+  whenVisible('#thing', init, {
+    rootMargin: LAZY.thingRootMargin,
+    label: 'thing',
+  });
+}
+```
+
+Do not hand-roll `IntersectionObserver` again. If you need a new behavior
+(e.g. re-observe, threshold arrays), extend `core/lazy.js` rather than
+duplicating in a module.
+
+## Vendor scripts — always go through `core/vendor-loader`
+
+```js
+import { VENDORS } from '../config/index.js';
+import { loadVendorScripts } from '../core/vendor-loader.js';
+
+await loadVendorScripts(VENDORS.portfolio);
+```
+
+- Order within a group is **significant** (popper → bootstrap,
+  imagesloaded → isotope → magnific-popup → infinite-scroll).
+- Loader deduplicates by URL; calling it twice is cheap.
+- The legacy `src/modules/vendor-loader.js` is a compat shim — new code
+  imports from `core/vendor-loader.js`.
+
+## Scroll / resize handlers
+
+- Raw `scroll` handlers are banned. Either use an `IntersectionObserver`
+  or wrap the handler with `rafThrottle` from `core/schedule.js` and pass
+  `{ passive: true }` to `addEventListener`.
+- Use `debounce` (also in `core/schedule.js`) for `resize` — see
+  `demos/demo-masonry.js` as the reference.
+
+## Theme awareness
+
+- Never read `localStorage.getItem('theme')` directly — use
+  `getTheme()` from `theme.js`.
+- To react to theme changes, subscribe to the `theme-change` CustomEvent:
+  `document.addEventListener('theme-change', (e) => e.detail.theme)`.
+- Don't add elements to the "strip-on-dark" list imperatively; the
+  `data-had-light` marker handles it automatically, so new elements that
+  have `.light` in their HTML Just Work.
+
+## Error handling & logging
+
+- Modules ship their own tagged logger: `const log = createLogger('xxx');`
+- Prefer `log.warn(msg, err)` over `console.log`.
+- The default production threshold is `warn`; `debug`/`info` only fire
+  in dev (guarded by `FLAGS.verboseBoot`).

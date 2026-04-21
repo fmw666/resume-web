@@ -1,0 +1,76 @@
+---
+description: How to keep the static checker and smoke test honest
+globs: scripts/**/*.mjs,scripts/**/*.sh,package.json
+alwaysApply: false
+---
+
+# Testing discipline
+
+Two layers. Both run locally with `npm test` and in CI on every push / PR.
+Neither is allowed to go red on main.
+
+## Layer 1 — `scripts/check-structure.mjs` (static)
+
+- No browser, no network. Reads files off disk and greps.
+- Catches the boring-but-deadly regressions:
+  - a required file was deleted,
+  - a required module stopped being imported by `main.js`,
+  - section order was silently shuffled,
+  - `demo-viewer.js` stopped delegating to the three sub-modules,
+  - a required CSS shard / vendor JS went missing,
+  - a required `package.json` script was removed,
+  - core infrastructure (`src/config/index.js`, `src/core/*.js`) is gone.
+- Rule: if you introduce a new **structural** invariant (a new phase, a
+  new required file, a new canonical ordering), add a `must(...)` line.
+- Keep `must()` labels human-readable — they appear verbatim in CI logs.
+- Comment stripping is already in place for `main.js` / `demo-viewer.js`
+  import detection; use the same `strippedX` pattern when extending.
+
+## Layer 2 — `scripts/smoke.mjs` (Puppeteer)
+
+- Runs the **built** site through `vite preview`, drives a headless
+  Chrome, asserts **observable user behavior**.
+- Every new user-visible feature earns at least one `assert(...)` /
+  `assertEq(...)` / `assertGte(...)` here.
+- Keep these invariants stable — they are the core contract:
+  - 9 sections present in the DOM
+  - 6 vendors (`jquery`, `wow`, `parallax`, `morphext`, `counterup`, `waypoint`)
+    reach the global scope
+  - Projects section renders exactly 12 demo cards
+  - Works section renders ≥ 7 grid items on page 1
+  - `?code=990718` reveals the experience section
+  - Scrolling to `#works` triggers the isotope + magnific-popup lazy load
+  - Clicking a demo card opens the full-screen viewer with a title
+  - Theme toggle: light→dark leaves 0 `.light` nodes; dark→light restores ≥ 50
+  - Preloader fades to hidden
+  - **0 pageerrors, 0 console.error, 0 failed same-origin requests**
+- Third-party hosts (`botpress`, `bpcontent.cloud`, `formspree`) are
+  excluded from the failed-request assertion via `isThirdParty()` —
+  keep that list accurate; don't silence same-origin failures.
+
+## Writing smoke assertions well
+
+- Prefer `assertEq(count, expected, label)` over `assert(count > 0, ...)`
+  for render-count invariants — drift is easier to diagnose.
+- Always give every assert a **label** that answers "what broke?" when
+  you read it alone in a CI log line. Avoid labels like `ok`, `check`.
+- Sleep sparingly; prefer `page.waitForFunction(…)` for anything that
+  isn't a known animation/debounce delay.
+
+## `npm test` wiring (`scripts/run-smoke.mjs`)
+
+- Builds if `dist/` is missing, then spawns `vite preview`, polls the
+  port, runs `smoke.mjs`, and cleans up on any exit path.
+- If you change the preview port, respect the `SMOKE_PORT` / `SMOKE_URL`
+  env vars; don't hard-code.
+- Keep the script process-signal-safe — it must kill the preview on
+  SIGINT/SIGTERM, or CI leaks processes.
+
+## Local quick commands
+
+```bash
+npm run test:static   # fastest, run this first during iterative edits
+npm run build         # sanity check bundler output
+npm run test:smoke    # full E2E; ~12s locally
+npm test              # both, same as CI
+```

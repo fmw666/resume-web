@@ -1,0 +1,93 @@
+---
+description: Austin's Resume & Portfolio — project DNA and non-negotiable conventions
+alwaysApply: true
+---
+
+# Project: Austin's Resume & Portfolio
+
+Vite-powered, modular static site. A highly-personalized SPA-ish resume, with
+AI chatbot, lazy-loaded portfolio, theme toggle, demo viewer, contact form.
+
+## Tech stack (don't introduce new runtime deps without a strong reason)
+
+- Build: **Vite 5** (ESM, `?raw` imports, `manualChunks`, `public/` for legacy assets)
+- Runtime: plain JS (ES2018 target) + **jQuery 1.12.4** (legacy plugin bridge only)
+- Testing: Node-based static checker + Puppeteer-core smoke test
+- Deployment: any static host (GitHub Pages / Vercel / Netlify); `base: './'`
+
+## The three architectural rails (do not cross)
+
+1. **Config-first, not magic-constant-first.**
+   Any new external URL, timeout, lazy threshold, secret, vendor script path,
+   or feature flag MUST live in `src/config/index.js` (freeze-grouped under
+   `ENDPOINTS` / `VENDORS` / `TIMINGS` / `LAZY` / `ACCESS` / `FLAGS`).
+   Runtime modules should import from `src/config`, never hardcode strings.
+
+2. **Boot through the pipeline, not through `main.js` edits.**
+   Registering work at startup is done with
+   `pipe.register(PHASES.X, 'label', fn)` in `src/main.js`. Do not grow the
+   boot function by inlining imperative `await` chains. The five phases are:
+   `PRE_MOUNT → MOUNT → POST_MOUNT → ENHANCE → DEFER`. Inside a phase tasks
+   run in parallel; between phases they are sequential.
+
+3. **Error isolation by default.**
+   Tasks registered in the pipeline are wrapped by `safeRun` — a single
+   module throwing MUST NOT break the others. When writing a new module,
+   never `throw` from the top-level init; log via `createLogger('tag')`
+   and return.
+
+## Module layout (SRP, one concern per file)
+
+```
+src/
+├── main.js            # Entry: only registers tasks into the pipeline
+├── config/
+│   └── index.js       # Single source of truth for constants & feature flags
+├── core/              # Cross-cutting infrastructure, business-agnostic
+│   ├── lifecycle.js   # Pipeline + PHASES
+│   ├── safe-run.js    # Error-isolated task runner
+│   ├── vendor-loader.js  # <script> injection with dedupe/retry/timeout
+│   ├── lazy.js        # whenVisible() IntersectionObserver helper
+│   ├── schedule.js    # rafThrottle / debounce / whenIdle
+│   └── logger.js      # Level-gated tagged logger
+├── modules/           # Business modules. Heavy ones may have a sub-dir
+│   └── demos/         # e.g. demo-viewer's sub-concerns
+└── sections/          # HTML partials (imported via Vite ?raw)
+```
+
+- `src/modules/*` depend on `src/core/*` and `src/config/*`, **never** the
+  other way around. `core/` and `config/` must stay pure / reusable.
+- If a module grows past ~200 lines with multiple concerns, split it (see
+  `modules/demos/` as the reference pattern).
+- Legacy jQuery plugins stay as raw files under `public/assets/js/` and are
+  injected at runtime through `core/vendor-loader`. npm only locks
+  `jquery@1.12.4` as the global bridge. **Do not port plugins to npm** —
+  that's an explicit design choice to avoid behavioral regressions.
+
+## CI gates — always keep green
+
+- `npm test` runs both:
+  - `test:static`: structural assertions (required files, `main.js` imports,
+    `sections.js` canonical order, `demo-viewer` delegation, etc.)
+  - `test:smoke`: Puppeteer E2E (9 sections, 6 vendors, render counts,
+    privacy gate, lazy-load, theme round-trip, preloader, **0 pageerror /
+    0 console.error / 0 failed same-origin requests**)
+- If you add a new structural invariant, add an assertion to
+  `scripts/check-structure.mjs`. If you add a new user-visible behavior,
+  add an assertion to `scripts/smoke.mjs`.
+
+## Branching, commits, PRs
+
+- Feature branches **must** be named `cursor/<kebab-case>-a8a4` (the suffix
+  is required for auto-merge routing).
+- One logical change per commit; messages use conventional prefixes:
+  `feat` / `fix` / `refactor` / `perf` / `build` / `docs` / `test` / `ci`.
+- PRs default to draft; the `auto-merge` workflow will queue them on green CI.
+- `main` is protected — never force-push, never commit directly.
+
+## Comments policy (matches existing code)
+
+- Comments explain **why** / trade-offs / non-obvious intent.
+- No narration comments ("// increment counter", "// import module").
+- Don't explain the change you're making in the code — that belongs in the
+  commit message / PR description.
