@@ -1,12 +1,16 @@
 /**
  * HTML section 注入器。
  *
- * 以前是 Python 脚本 create_index_html.py 在构建期把多个 section
- * 片段拼进 index.html。现在交给 Vite：用 `?raw` 把每个 section 的
- * HTML 作为字符串导入，运行时按顺序拼进 <main id="main">，Vite 会
- * 把资源引用和依赖一起打包 & 压缩。
+ * 每个区块是独立 `.html` 片段，通过 Vite `?raw` 作为字符串编译进 bundle，
+ * 运行时按顺序拼进 `<main id="main">`。改某个区块完全不会影响其他区块，
+ * 想加新页面只需：
+ *   1. 新建 `src/sections/<name>.html`
+ *   2. 在 `SECTIONS_IN_ORDER` 里按期望顺序插入即可
  *
- * 顺序和原先 `sections = [...]` 数组保持一致。
+ * 性能细节：
+ *   - 先用一个 `<template>` 做字符串→节点的一次性 parse，
+ *   - 再把节点搬到 DocumentFragment 里一次性 `appendChild` 到 `<main>`，
+ *   所以整个注入只触发一次 layout。
  */
 import homeHtml from '../sections/home.html?raw';
 import agentHtml from '../sections/agent.html?raw';
@@ -34,12 +38,12 @@ export function mountSections(target = '#main') {
   const root = document.querySelector(target);
   if (!root) return;
 
-  // 追加到 spacer 之后（原结构中 main 里已经有一个 .spacer 占位）
+  const tpl = document.createElement('template');
+  tpl.innerHTML = SECTIONS_IN_ORDER.join('\n');
+
   const frag = document.createDocumentFragment();
-  const container = document.createElement('div');
-  container.innerHTML = SECTIONS_IN_ORDER.join('\n');
-  while (container.firstChild) {
-    frag.appendChild(container.firstChild);
+  while (tpl.content.firstChild) {
+    frag.appendChild(tpl.content.firstChild);
   }
   root.appendChild(frag);
 }
