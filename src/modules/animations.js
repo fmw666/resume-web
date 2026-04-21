@@ -73,16 +73,6 @@ export function initSkillBars() {
   });
 }
 
-/**
- * 把 data-height / data-color 属性应用到对应元素。
- */
-export function applyDataAttrs() {
-  document.querySelectorAll('.spacer').forEach((el) => {
-    const size = el.getAttribute('data-height');
-    if (size) el.style.height = `${size}px`;
-  });
-  document.querySelectorAll('.data-background').forEach((el) => {
-    const color = el.getAttribute('data-color');
-    if (color) el.style.backgroundColor = color;
-  });
-}
+// `applyDataAttrs` 以前住在这里，但它跟动画无关。已挪到 `./dom-utils.js`。
+// 为保持 `main.js` 的 `import { applyDataAttrs } from './animations.js'`
+// 这种老路径短期内不被破坏（现已同步更新），这里不再重新导出。
