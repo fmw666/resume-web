@@ -1,28 +1,6 @@
 /**
- * 顺序加载 vendor <script>（防止并行下载导致依赖顺序错乱）。
+ * @deprecated 已迁移到 `src/core/vendor-loader.js`（带缓存/去重/重试）。
+ * 这里只是个薄 shim，为老外部调用保留同名 export。新代码请直接从
+ * `core/vendor-loader` 引入。
  */
-
-const loaded = new Map();
-
-function loadOne(src) {
-  if (loaded.has(src)) return loaded.get(src);
-  const promise = new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = false;
-    s.defer = false;
-    s.dataset.vendor = src;
-    s.onload = () => resolve();
-    s.onerror = () => reject(new Error(`Failed to load ${src}`));
-    document.head.appendChild(s);
-  });
-  loaded.set(src, promise);
-  return promise;
-}
-
-export async function loadVendorScripts(srcs) {
-  for (const src of srcs) {
-    // eslint-disable-next-line no-await-in-loop
-    await loadOne(src);
-  }
-}
+export { loadVendorScripts, loadVendorScript } from '../core/vendor-loader.js';
