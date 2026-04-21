@@ -1,0 +1,25 @@
+/*=================================================================*/
+/*                      FACTS                              
+/*=================================================================*/
+.fact-item .details {
+  margin-left: 60px;
+}
+.fact-item .icon {
+  font-size: 36px;
+  color: #6c6ca6;
+  float: left;
+}
+.fact-item .number {
+  font-size: 30px;
+}
+.fact-item .number em {
+  font-style: normal;
+  text-shadow: 4px 4px 8px #393a3e, -4px -4px 8px #333248;
+}
+.fact-item .number em.light {
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+.fact-item p {
+  font-size: 16px;
+}
+

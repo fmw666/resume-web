@@ -1,0 +1,158 @@
+/*=================================================================*/
+/*                      DEMOS — Fullscreen Viewer
+/*=================================================================*/
+.dv {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s ease, visibility .35s ease !important;
+}
+.dv.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.dv-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.92);
+}
+
+/*----- Main media -----*/
+.dv-main {
+  position: relative;
+  z-index: 1;
+  max-width: 88vw;
+  max-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dv-media {
+  display: none;
+  max-width: 90vw;
+  max-height: 86vh;
+  border-radius: 6px;
+  object-fit: contain;
+  box-shadow: 0 8px 60px rgba(0,0,0,.5);
+  transition: none !important;
+  cursor: zoom-in;
+}
+.dv-media.is-active {
+  display: block;
+}
+.dv-main.is-zoomed {
+  overflow: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+  cursor: zoom-out;
+}
+.dv-main.is-zoomed .dv-media {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+  border-radius: 0;
+  box-shadow: none;
+}
+.dv-video.is-active {
+  display: block;
+  max-width: 80vw;
+  outline: none;
+}
+
+/*----- Info bar -----*/
+.dv-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 28px 36px;
+  background: linear-gradient(0deg, rgba(0,0,0,.7) 0%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .4s ease, transform .4s ease !important;
+}
+.dv.is-open .dv-info {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: .2s !important;
+}
+.dv-info-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+}
+.dv-info-desc {
+  font-size: .85rem;
+  color: rgba(255,255,255,.65);
+  margin: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dv-info-link {
+  font-size: .78rem;
+  color: #FF4C60;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 4px 14px;
+  border: 1px solid rgba(255,76,96,.4);
+  border-radius: 20px;
+  transition: background .2s ease, color .2s ease !important;
+}
+.dv-info-link:hover {
+  background: #FF4C60;
+  color: #fff;
+  text-decoration: none;
+}
+.dv-info-link.is-hidden {
+  display: none;
+}
+
+/*----- Nav buttons -----*/
+.dv-close,
+.dv-nav {
+  position: absolute;
+  z-index: 3;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.65);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 12px;
+  transition: color .2s ease, transform .2s ease !important;
+}
+.dv-close:hover, .dv-nav:hover {
+  color: #fff;
+}
+.dv-close {
+  top: 20px;
+  right: 24px;
+  font-size: 1.5rem;
+  z-index: 10;
+}
+.dv-prev {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dv-prev:hover { transform: translateY(-50%) translateX(-3px); }
+.dv-next {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dv-next:hover { transform: translateY(-50%) translateX(3px); }
+.dv-nav.is-hidden { display: none; }
+

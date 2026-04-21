@@ -1,0 +1,62 @@
+/*=================================================================*/
+/*                      PRICES                              
+/*=================================================================*/
+.price-item {
+  padding: 30px 40px;
+}
+.price-item h2.plan {
+  font-size: 24px;
+  text-shadow: 4px 4px 8px #575d79, -4px -4px 8px #1b1a35;
+}
+.price-item h2.plan.light {
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+.price-item .price {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+}
+.price-item .price em {
+  font-style: normal;
+  font-size: 14px;
+  vertical-align: super;
+  margin-right: 5px;
+}
+.price-item .price span {
+  font-size: 16px;
+  font-weight: 400;
+  margin-left: 10px;
+}
+.price-item ul {
+  margin-bottom: 0;
+}
+.price-item ul li {
+  line-height: 2.1;
+}
+.price-item .btn {
+  margin-top: 20px;
+}
+.price-item.best {
+  padding: 55px 40px;
+  z-index: 1;
+  position: relative;
+}
+.price-item .badge {
+  color: #FFF;
+  background: #6C6CE5;
+  -webkit-transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+  position: absolute;
+  left: 0;
+  top: 46px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+

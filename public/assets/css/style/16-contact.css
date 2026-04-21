@@ -1,0 +1,18 @@
+/*=================================================================*/
+/*                      CONTACT                              
+/*=================================================================*/
+.contact-info {
+  background-image: url("../../images/map.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 200px;
+}
+.contact-info h3 {
+  font-size: 23px;
+  margin: 0 0 10px;
+  text-shadow: 4px 4px 8px #575d79, -4px -4px 8px #1b1a35;
+}
+.contact-info h3.light {
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+

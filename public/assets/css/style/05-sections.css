@@ -1,0 +1,134 @@
+/*=================================================================*/
+/*                      SECTIONS                             
+/*=================================================================*/
+main.content {
+  margin-left: 230px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background: #353353;;
+}
+main.content.light {
+  background: #e0e5ec;
+}
+main.content.open {
+  opacity: 0.8;
+  -webkit-transform: translateX(230px);
+  -ms-transform: translateX(230px);
+  transform: translateX(230px);
+}
+
+main.content-2 {
+  margin-left: 110px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+main.content-2.open {
+  opacity: 0.8;
+  -webkit-transform: translateX(110px);
+  -ms-transform: translateX(110px);
+  transform: translateX(110px);
+}
+
+section {
+  padding-top: 110px;
+  position: relative;
+  background: #353353;
+  color: #FFF;
+}
+section h2,
+section h3,
+section h4 {
+  color: #FFF;
+  text-shadow: 4px 4px 8px #575d79, -4px -4px 8px #1b1a35;
+}
+section h2.light,
+section h3.light,
+section h4.light {
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+section li,
+section span {
+  color: #FFF;
+}
+section.light {
+  background: #e0e5ec;
+  color: #5E5C7F;
+}
+section.light h2,
+section.light h3,
+section.light h4 {
+  color: #5E5C7F;
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+section.light li,
+section.light span {
+  color: #5E5C7F;
+}
+
+section.home {
+  padding: 0;
+  height: 95vh;
+  min-height: 95vh;
+}
+section.home .intro {
+  margin: auto;
+  max-width: 540px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+section.home .intro h1 {
+  color: #FFF;
+  font-size: 36px;
+}
+section.home .intro span {
+  color: #FFF;
+  font-size: 16px;
+}
+section.home .social-icons li a {
+  color: #FFF;
+}
+section.home.light {
+  background: #e0e5ec;
+}
+section.home.light .intro h1 {
+  color: #282642;
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+section.home.light .intro span {
+  color: #454360;
+}
+section.home.light .social-icons li a {
+  color: #353353;
+}
+section.home.light .social-icons li a:hover {
+  color: #FFD15C;
+}
+
+.section-title {
+  font-size: 36px;
+  margin: 0;
+  margin-left: 14px;
+  position: relative;
+  text-shadow: 4px 4px 8px #575d79, -4px -4px 8px #1b1a35;
+}
+.section-title:before {
+  content: "";
+  background-image: url(../../images/dots-bg.svg);
+  display: block;
+  height: 37px;
+  left: -14px;
+  top: -14px;
+  position: absolute;
+  width: 37px;
+}
+
+.rounded-image {
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+  object-fit: cover;
+}
+

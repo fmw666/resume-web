@@ -1,0 +1,105 @@
+/*=================================================================*/
+/*                      DEMOS — Arc Panel
+/*=================================================================*/
+.dv-arc-trigger {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 100%;
+  z-index: 4;
+}
+.dv-arc-panel {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) translateX(calc(100% + 20px));
+  z-index: 5;
+  padding: 24px 14px 24px 20px;
+  background: none;
+  border: none;
+  transition: transform .5s cubic-bezier(.25,.8,.25,1), opacity .4s ease !important;
+  opacity: 0;
+}
+.dv-arc-panel.is-visible {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+.dv-arc-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/*----- Thumbnails -----*/
+.dv-thumb {
+  position: relative;
+  width: 96px;
+  height: 66px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid rgba(255,255,255,.12);
+  flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(0,0,0,.45);
+  transform-origin: right center;
+  transition: transform .35s cubic-bezier(.25,.8,.25,1),
+              border-color .25s ease,
+              box-shadow .25s ease,
+              opacity .35s ease !important;
+}
+.dv-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: filter .25s ease !important;
+}
+.dv-thumb:hover img {
+  filter: brightness(1.15);
+}
+.dv-thumb:hover {
+  border-color: rgba(255,255,255,.55);
+  box-shadow: 0 6px 22px rgba(0,0,0,.55);
+  z-index: 2;
+}
+.dv-thumb.is-active {
+  border-color: #FF4C60;
+  box-shadow: 0 0 0 3px rgba(255,76,96,.3), 0 4px 16px rgba(0,0,0,.5);
+  z-index: 3;
+}
+.dv-thumb.is-active img {
+  filter: brightness(1.05);
+}
+.dv-thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  font-size: .85rem;
+  pointer-events: none;
+}
+.dv-thumb-play i {
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.5));
+}
+
+/*----- Arc panel responsive -----*/
+@media (max-width: 767px) {
+  .dv-arc-panel { padding: 16px 10px 16px 14px; }
+  .dv-thumb { width: 74px; height: 52px; border-radius: 8px; }
+  .dv-arc-list { gap: 8px; }
+  .dv-main { max-width: 94vw; }
+  .dv-info { padding: 18px 20px; flex-wrap: wrap; }
+  .dv-prev { left: 8px; }
+  .dv-next { right: 8px; }
+}
+@media (max-width: 575px) {
+  .dv-thumb { width: 60px; height: 42px; }
+  .dv-next { display: none; }
+}
+

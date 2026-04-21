@@ -33,8 +33,8 @@ import {
   initParallax,
   initCounterUp,
   initSkillBars,
-  applyDataAttrs,
 } from './modules/animations.js';
+import { applyDataAttrs } from './modules/dom-utils.js';
 import { initSelfIntroAudio } from './modules/self-intro.js';
 import { initAgentCopy } from './modules/agent.js';
 import { initPortfolioLazy } from './modules/portfolio.js';
