@@ -108,15 +108,34 @@ npm run preview  # -> http://localhost:4173
 
 `vite.config.js` 里 `base: './'` 保证部署到子路径也能工作。
 
-### 冒烟测试
+## ✅ 测试 & 质量门控
+
+本地一键跑全部检查：
 
 ```bash
-# 先启动 preview 服务
-npm run build && npm run preview &
-# 然后在另一个终端跑
-node scripts/smoke-test.mjs
-node scripts/smoke-test-2.mjs
+npm test            # = test:static + test:smoke（任一失败 → exit 1）
+npm run test:static # 纯静态结构检查，不启动浏览器
+npm run test:smoke  # build + preview + Puppeteer 端到端冒烟（带退出码）
 ```
+
+| 层级 | 脚本 | 覆盖 |
+|---|---|---|
+| 静态结构 | `scripts/check-structure.mjs` | 必需文件/模块/section/资源存在；main.js 按真正 import（排除注释）组装所有模块；sections.js 的 8 个区块按规范顺序；index.html 正确挂载入口 |
+| 端到端冒烟 | `scripts/smoke.mjs` + `scripts/run-smoke.mjs` | 8 个 section DOM 注入；6 个 vendor 脚本到全局；Demos/Works 渲染数量；URL `?code=` 隐私控制；滚动懒加载触发；Demo viewer 打开/标题；主题切换；Preloader 淡出；**零 runtime error / 零失败同源请求** |
+
+总共 **32 条断言**。任何一条失败 → 命令退出码 1。
+
+### CI 门控
+
+`.github/workflows/ci.yml` 在每次 `push` 和 PR 上自动跑：
+
+1. `npm ci` 安装依赖
+2. `npm run test:static`
+3. `npm run build`
+4. `npm run test:smoke`（用 `browser-actions/setup-chrome` 的 headless Chrome）
+5. 上传 `dist/` artifact（成功时，便于部署追溯）
+
+PR 若任一步失败会被标红、阻止合并。
 
 ## 🐛 Known Issues
 
