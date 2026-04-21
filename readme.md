@@ -28,10 +28,19 @@
 
 ```
 ├── index.html              # Vite 入口（HTML 壳，不要在此拼装 sections）
-├── vite.config.js          # Vite 配置（output=dist, assetsDir=app）
+├── vite.config.js          # Vite 配置（output=dist, assetsDir=app, manualChunks）
 ├── package.json            # npm 依赖、scripts
 ├── src/
-│   ├── main.js             # 应用入口：按序组装所有模块
+│   ├── main.js             # 应用入口：注册式 pipeline，分阶段 + 错误隔离
+│   ├── config/
+│   │   └── index.js        # 配置中心：外部 URL / 时序 / 懒加载阈值 / feature flag
+│   ├── core/               # 与业务无关的基础设施
+│   │   ├── lifecycle.js    # Pipeline 抽象：PHASES + 并行执行 + 错误隔离
+│   │   ├── safe-run.js     # 把任务包成"抛错不影响其他任务"
+│   │   ├── logger.js       # 分级日志（生产默认 warn+）
+│   │   ├── vendor-loader.js# 动态 <script> 注入：去重/超时/重试
+│   │   ├── lazy.js         # 统一 IntersectionObserver 懒加载样板
+│   │   └── schedule.js     # rAF 节流 / debounce / whenIdle
 │   ├── modules/            # 业务模块（每个职责独立，便于维护）
 │   │   ├── jquery-global.js        # 把 jQuery 暴露到 window.$
 │   │   ├── sections.js             # HTML partials 注入
@@ -86,11 +95,20 @@
     └── run-smoke.mjs           # 一键 build + preview + smoke
 ```
 
-### 模块化策略
+### 架构策略
 
+- **启动 pipeline（`src/core/lifecycle.js`）**：boot 过程被切成 `PRE_MOUNT` →
+  `MOUNT` → `POST_MOUNT` → `ENHANCE` → `DEFER` 五个阶段。每个阶段内任务并行
+  执行（`Promise.allSettled`），阶段之间串行。新增模块只需 `pipe.register(phase, label, fn)`
+  一行，`main.js` 不会随规模爆炸。任何一个任务抛错都被 `safeRun` 捕获并记录，
+  不会连累其他任务。
+- **配置集中（`src/config/index.js`）**：外部服务 URL、时序、懒加载阈值、
+  访问码等一律放这里，并通过 `Object.freeze` 固化；支持 `import.meta.env.VITE_*`
+  覆盖，便于部署时改 CDN / Formspree 项目 / Botpress 配置。
 - **每个模块一个职责（SRP）**：
   - 业务模块放在 `src/modules/`，重而边界清的子职责（如 demo viewer 的 3 个子模块）
     放在同名子目录下；
+  - 与业务解耦的基础设施放在 `src/core/`；
   - 样式按 `TABLE OF CONTENTS` 拆成 27 个 ≤ 500 行的分片（`public/assets/css/style/`），
     `style.css` 退化为只做 `@import` 的清单。CI 里 `test:static` 会断言几个关键分片
     必须存在 + `demo-viewer.js` 必须委托给 3 个子模块，防止未来回到"胖文件"。
@@ -99,12 +117,21 @@
   不会影响其他区块。想加新页面？把一个新模块接入 `main.js` 即可。
 - **动画零回归**：Morphext / WOW / Parallax / Counterup / Waypoints / Isotope / Slick /
   MagnificPopup / infinite-scroll 等老 jQuery 插件**保留原文件**在 `public/assets/js/`，
-  通过 `vendor-loader` 按需动态注入。`npm` 只锁 `jquery@1.12.4` 作为 ES 模块的全局桥接。
-- **懒加载**：`Portfolio` 和 `Testimonials` 模块用 `IntersectionObserver` 监听目标区块，
-  只有真的滚到附近时才下载对应的重量级插件（Isotope / MagnificPopup / InfiniteScroll /
-  Slick），首屏显著变轻。
-- **Chatbot**：用 `requestIdleCallback` 延后创建 Botpress iframe，避免阻塞首屏。
-- **资源指纹**：Vite 自动为 JS 加上内容 hash 文件名，再不用手动写 `?v=20260410`。
+  通过 `core/vendor-loader` 按需动态注入（带去重 / 超时 / 重试）。`npm` 只锁
+  `jquery@1.12.4` 作为 ES 模块的全局桥接。
+- **懒加载抽象**：`Portfolio` / `Testimonials` 通过 `core/lazy.whenVisible` 统一
+  `IntersectionObserver` 样板，只有真的滚到附近才下载对应的重量级插件（Isotope /
+  MagnificPopup / InfiniteScroll / Slick）。Portfolio 的 vendor 下载与第二页 HTML
+  import 并行发起，进一步缩短可交互延迟。
+- **Chatbot**：`core/schedule.whenIdle` 在浏览器空闲时创建 Botpress iframe；用户点击
+  widget 时立即拉起，不等 idle。
+- **资源指纹 + 代码分包**：Vite 给每个 chunk 加 content hash；`manualChunks`
+  把 jQuery 和 `src/core/` 分别拆成独立 chunk，便于长缓存与按需加载。
+- **Theme 切换**：用 `data-had-light` 打标 + 一次性批读批写，避免在切换时
+  对整棵 DOM 造成多轮强制布局；并 `dispatchEvent('theme-change')` 广播给
+  订阅方，代替"谁都直接 import theme 内部状态"。
+- **Return-to-top**：用 `IntersectionObserver` 监测"顶部哨兵"替代逐帧 `scroll`
+  handler，主线程更安静，滚动更顺滑。
 
 ## 🚀 开发 & 部署
 

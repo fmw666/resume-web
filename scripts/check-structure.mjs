@@ -75,6 +75,18 @@ REQUIRED_MODULES.forEach((m) => {
   must(fileExists(`src/modules/${m}`), `module: src/modules/${m}`);
 });
 
+// ── 2b) 新架构的核心基础设施 & 配置 ───────────────
+console.log('\n[2b] Core infrastructure & config present');
+[
+  'src/config/index.js',
+  'src/core/logger.js',
+  'src/core/safe-run.js',
+  'src/core/vendor-loader.js',
+  'src/core/lazy.js',
+  'src/core/schedule.js',
+  'src/core/lifecycle.js',
+].forEach((p) => must(fileExists(p), `file: ${p}`));
+
 // ── 3) 所有 section html 齐全 ────────────────────
 console.log('\n[3] Section HTML partials present');
 const REQUIRED_SECTIONS = [
