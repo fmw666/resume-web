@@ -1,20 +1,17 @@
 /**
- * Entry — 组合各模块成完整页面。
+ * 应用入口 —— 把启动过程组织成一个 **分阶段的 pipeline**：
  *
- * 整体启动顺序：
- *   1. 暴露 jQuery 到全局（老 jQuery 插件都依赖 window.jQuery）
- *   2. 注入 HTML sections（所有后续 DOM 查询依赖此）
- *   3. 基础交互（主题 / 导航 / 菜单 / 返回顶部 / 数据属性 / 隐私控制）
- *   4. 加载核心 vendor 脚本（popper / bootstrap / wow / parallax / morphext ...）
- *      然后初始化对应动画
- *   5. About 音频 / Contact 表单
- *   6. 懒加载 portfolio / testimonials（IntersectionObserver 触发）
- *   7. 初始化 Projects 的 Demo Viewer
- *   8. Chatbot 异步加载
- *   9. 窗口 load 事件后淡出 preloader
+ *   PRE_MOUNT   初始化主题（在 sections 注入前应用，避免浅色→深色闪烁）
+ *   MOUNT       注入 HTML sections（一次性串行，其它步骤都依赖它）
+ *   POST_MOUNT  无 vendor 依赖的轻交互（导航、数据属性、隐私控制、…）
+ *   ENHANCE     需要核心 vendor 就绪的动画 & scrollspy
+ *   DEFER       懒加载类（portfolio / testimonials / chatbot / viewer）
+ *
+ *   - 每个阶段内任务**并行**执行（Promise.allSettled），
+ *   - 任一任务抛错走 `safeRun` 捕获，日志落 logger，不中断其它任务，
+ *   - 新增模块只需在 `registerXxx` 里再加一条，不会让 boot 函数越写越长。
  */
 import './modules/jquery-global.js';
-import $ from 'jquery';
 
 import { mountSections } from './modules/sections.js';
 import { initTheme, bindThemeToggle } from './modules/theme.js';
@@ -44,60 +41,60 @@ import { initChatbot } from './modules/chatbot.js';
 import { enforcePrivacy } from './modules/privacy.js';
 import { initDemoViewer } from './modules/demo-viewer.js';
 
+import { createPipeline, PHASES, onDomReady, onWindowLoad } from './core/lifecycle.js';
+import { safeRun } from './core/safe-run.js';
+import { logger } from './core/logger.js';
+
+function buildPipeline() {
+  const pipe = createPipeline();
+
+  pipe.register(PHASES.PRE_MOUNT, 'theme:init', initTheme);
+
+  pipe.register(PHASES.MOUNT, 'sections:mount', () => mountSections('#main'));
+
+  pipe.register(PHASES.POST_MOUNT, 'dom-attrs', applyDataAttrs);
+  pipe.register(PHASES.POST_MOUNT, 'privacy', enforcePrivacy);
+  pipe.register(PHASES.POST_MOUNT, 'theme:toggle', bindThemeToggle);
+  pipe.register(PHASES.POST_MOUNT, 'nav:menu', initMobileMenu);
+  pipe.register(PHASES.POST_MOUNT, 'nav:submenu', initSubMenuSwitch);
+  pipe.register(PHASES.POST_MOUNT, 'nav:return-top', initReturnToTop);
+  pipe.register(PHASES.POST_MOUNT, 'self-intro', initSelfIntroAudio);
+  pipe.register(PHASES.POST_MOUNT, 'agent', initAgentCopy);
+
+  // ENHANCE：核心 vendor 就绪后再绑定依赖它们的能力。
+  pipe.register(PHASES.ENHANCE, 'vendors:core+scrollspy+smooth+animations', async () => {
+    await loadCoreVendors();
+    // 下面这些每个都包在 safeRun 里，避免某一个 vendor 异常连累其它。
+    await Promise.allSettled([
+      safeRun('scrollspy', initScrollspy),
+      safeRun('smooth-scroll', initSmoothScroll),
+      safeRun('morphext', initMorphext),
+      safeRun('parallax', initParallax),
+      safeRun('counterup', initCounterUp),
+      safeRun('skillbars', initSkillBars),
+      safeRun('wow', initWow),
+    ]);
+  });
+
+  // DEFER：可延后的重模块 & 第三方 iframe。
+  pipe.register(PHASES.DEFER, 'contact', initContactForm);
+  pipe.register(PHASES.DEFER, 'portfolio:lazy', initPortfolioLazy);
+  pipe.register(PHASES.DEFER, 'testimonials:lazy', initTestimonialsLazy);
+  pipe.register(PHASES.DEFER, 'demo-viewer', initDemoViewer);
+  pipe.register(PHASES.DEFER, 'chatbot', initChatbot);
+
+  return pipe;
+}
+
 async function boot() {
-  // 1. 主题（必须在 sections 注入之前：.light 类依赖 saved theme）
-  initTheme();
+  logger.debug('booting…');
+  const pipe = buildPipeline();
+  await pipe.run();
 
-  // 2. 注入 sections
-  mountSections('#main');
-
-  // 3. 数据属性 + 隐私控制 + 基础交互
-  applyDataAttrs();
-  enforcePrivacy();
-  bindThemeToggle();
-  initMobileMenu();
-  initSubMenuSwitch();
-  initReturnToTop();
-
-  // 4. 核心 vendors（包括 bootstrap 的 scrollspy 依赖）
-  await loadCoreVendors();
-
-  // scrollspy 依赖 bootstrap
-  initScrollspy();
-  // 平滑滚动依赖 jquery.easing
-  initSmoothScroll();
-
-  // 动画
-  initMorphext();
-  initParallax();
-  initCounterUp();
-  initSkillBars();
-  initWow();
-
-  // 5. About 音频 + For-Your-Agent 剪贴板 + Contact 表单
-  initSelfIntroAudio();
-  initAgentCopy();
-  initContactForm();
-
-  // 6. 懒加载
-  initPortfolioLazy();
-  initTestimonialsLazy();
-
-  // 7. Demo viewer
-  initDemoViewer();
-
-  // 8. Chatbot
-  initChatbot();
-
-  // 9. Preloader 淡出
-  $(window).on('load', hidePreloader);
-  if (document.readyState === 'complete') {
-    hidePreloader();
-  }
+  // preloader 依赖 window.load 真正可见资源就绪；若已经 complete 也兜底一次。
+  onWindowLoad(hidePreloader);
+  if (document.readyState === 'complete') hidePreloader();
+  logger.debug('boot complete');
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot);
-} else {
-  boot();
-}
+onDomReady(boot);

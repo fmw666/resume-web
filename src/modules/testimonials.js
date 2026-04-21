@@ -2,14 +2,16 @@
  * Testimonials 区块的 Slick 轮播。按需懒加载。
  */
 import $ from 'jquery';
-import { loadVendorScripts } from './vendor-loader.js';
+import { VENDORS, LAZY } from '../config/index.js';
+import { loadVendorScripts } from '../core/vendor-loader.js';
+import { whenVisible } from '../core/lazy.js';
 
 let loaded = false;
 
 async function init() {
   if (loaded) return;
   loaded = true;
-  await loadVendorScripts(['/assets/js/slick.min.js']);
+  await loadVendorScripts(VENDORS.testimonials);
   $('.testimonials-wrapper').slick({
     dots: true,
     arrows: false,
@@ -19,23 +21,8 @@ async function init() {
 }
 
 export function initTestimonialsLazy() {
-  const el = document.querySelector('.testimonials-wrapper');
-  if (!el) return;
-
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            io.disconnect();
-            init();
-          }
-        });
-      },
-      { rootMargin: '200px' },
-    );
-    io.observe(el);
-  } else {
-    init();
-  }
+  whenVisible('.testimonials-wrapper', init, {
+    rootMargin: LAZY.testimonialsRootMargin,
+    label: 'testimonials',
+  });
 }

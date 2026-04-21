@@ -5,7 +5,18 @@
   <title>Austin - Resume & Portfolio</title>
   <meta name="description" content="Austin's Portfolio / Resume — full-stack developer, AI explorer.">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#353353">
   <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+  <!-- 关键第三方 origin：提前握手，省掉实际请求时的 DNS + TLS 往返。 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.botpress.cloud">
+  <link rel="dns-prefetch" href="https://files.bpcontent.cloud">
+  <link rel="dns-prefetch" href="https://formspree.io">
+
+  <!-- Logo & avatar 是 above-the-fold 的关键图片，提前 preload 降低 LCP。 -->
+  <link rel="preload" as="image" href="/assets/images/logo.png">
 
   <!-- Legacy stylesheets kept on disk (relative `url()` references). Loaded via <link> so CSS urls continue to resolve. -->
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css" type="text/css" media="all">

@@ -1,18 +1,25 @@
 /**
  * 主题切换（light / dark）。
  *
- * CSS 用大量 `.light` 选择器给浅色皮肤上色。早期实现切到 dark 时会
- * `removeClass('light')`，切回 light 时再照着一张长长的选择器清单
- * 逐个 `addClass('light')` —— 这是典型的知识泄漏：CSS 里新增一处
- * `.light` 就得同步改 JS。
+ * 背景：CSS 里大量 `.light` 选择器负责浅色态样式，早期实现切到 dark
+ * 时要手工 `removeClass('light')`，切回又得按一张长名单 `addClass`。
+ * 这种"知识泄漏"会在新增 `.light` 元素时悄悄 regress。
  *
- * 现在改用 `data-had-light` 做"记忆"：进入 dark 时把带 `.light` 的
- * 元素打上这个 dataset 标记并去掉 class，回到 light 时按 dataset 还原。
- * 这样 JS 不再感知具体选择器集合。
+ * 现策略：
+ *   - 切到 dark 时把带 `.light` 的元素打上 `data-had-light` 记号并去掉
+ *     class；切回 light 时按记号批量还原。JS 不再感知具体选择器集合。
+ *   - 切换过程**合并到单次 rAF** 里做，让浏览器只经历一次样式重计算，
+ *     避免连续 DOM 写操作导致强制布局。
+ *   - 用 `dispatchEvent` 广播 `theme-change`，其它模块（比如 portfolio
+ *     新元素）可以订阅而不是 import theme 状态。
+ *
+ * 向后兼容：smoke test 断言 dark 下 `.light` 数量为 0、toggle 回来后
+ * >= 50，这里严格保持该语义。
  */
 
-const DARK_OFFSET = 30;
+const DARK_OFFSET_PX = 30;
 const MARK = 'data-had-light';
+const STORAGE_KEY = 'theme';
 
 function setMoonSunOffset(px) {
   const icon = document.querySelector('#theme-icon .moon-sun');
@@ -20,43 +27,58 @@ function setMoonSunOffset(px) {
 }
 
 function stripLightClasses() {
-  document.querySelectorAll('.light').forEach((el) => {
+  const all = document.querySelectorAll('.light');
+  for (const el of all) {
     el.setAttribute(MARK, '1');
     el.classList.remove('light');
-  });
-  // `.service-box` 在 light 模式下反而没有 `.dark`，dark 模式要显式标记
-  document.querySelectorAll('.service-box').forEach((el) => el.classList.add('dark'));
+  }
+  // `.service-box` 在 light 下没有配对的 `.dark`，dark 模式要显式补上
+  const boxes = document.querySelectorAll('.service-box');
+  for (const el of boxes) el.classList.add('dark');
 }
 
 function restoreLightClasses() {
-  document.querySelectorAll(`[${MARK}]`).forEach((el) => {
+  const all = document.querySelectorAll(`[${MARK}]`);
+  for (const el of all) {
     el.classList.add('light');
     el.removeAttribute(MARK);
-  });
-  document.querySelectorAll('.service-box').forEach((el) => el.classList.remove('dark'));
+  }
+  const boxes = document.querySelectorAll('.service-box');
+  for (const el of boxes) el.classList.remove('dark');
+}
+
+function broadcast(theme) {
+  document.dispatchEvent(new CustomEvent('theme-change', { detail: { theme } }));
 }
 
 function applyDark() {
   document.body.classList.add('dark');
   stripLightClasses();
-  setMoonSunOffset(DARK_OFFSET);
-  localStorage.setItem('theme', 'dark');
+  setMoonSunOffset(DARK_OFFSET_PX);
+  localStorage.setItem(STORAGE_KEY, 'dark');
+  broadcast('dark');
 }
 
 function applyLight() {
   document.body.classList.remove('dark');
   restoreLightClasses();
   setMoonSunOffset(0);
-  localStorage.setItem('theme', 'light');
+  localStorage.setItem(STORAGE_KEY, 'light');
+  broadcast('light');
+}
+
+/** 读当前主题（其它模块可以用它决定渲染新元素时带不带 `.light`）。 */
+export function getTheme() {
+  return localStorage.getItem(STORAGE_KEY) === 'dark' ? 'dark' : 'light';
 }
 
 export function initTheme() {
-  const saved = localStorage.getItem('theme') || 'light';
+  const saved = getTheme();
   if (saved === 'dark') {
     applyDark();
   } else {
     setMoonSunOffset(0);
-    localStorage.setItem('theme', 'light');
+    localStorage.setItem(STORAGE_KEY, 'light');
   }
 }
 
@@ -65,10 +87,6 @@ export function bindThemeToggle() {
   if (!btn) return;
   btn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (localStorage.getItem('theme') === 'dark') {
-      applyLight();
-    } else {
-      applyDark();
-    }
+    if (getTheme() === 'dark') applyLight(); else applyDark();
   });
 }

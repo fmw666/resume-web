@@ -1,0 +1,61 @@
+---
+description: Conventions for HTML section partials, CSS shards, and the index.html shell
+globs: src/sections/**/*.html,public/assets/css/**/*.css,index.html
+alwaysApply: false
+---
+
+# Sections, styles, and the HTML shell
+
+## Sections (`src/sections/*.html`)
+
+- One file per page region. The file is imported in `src/modules/sections.js`
+  via `?raw` and injected into `<main id="main">` at runtime.
+- **Canonical order** (enforced by `scripts/check-structure.mjs`):
+  `home → agent → about → services → experience → works → projects → blog
+   → contact`. Do not reorder without updating the assertion.
+- Adding a new section:
+  1. Create `src/sections/<name>.html`
+  2. Import it in `sections.js` and splice into `SECTIONS_IN_ORDER` at the
+     intended position
+  3. Add it to `REQUIRED_SECTIONS` in `scripts/check-structure.mjs`
+  4. Add an `assert(#<name> exists)` smoke check
+  5. Link it from the desktop header `<nav>` in `index.html`
+- `works-page-2.html` is special — lazy-imported inside `portfolio.js` for
+  the "load more" flow. Don't wire it through `sections.js`.
+- Section HTML must stay self-contained: any runtime JS behavior lives in
+  `src/modules/<name>.js`, not inline `<script>`.
+
+## CSS shards (`public/assets/css/style/`)
+
+- `style.css` is the TABLE OF CONTENTS — purely `@import` statements in
+  a fixed order. Do not add raw rules there.
+- There are 27 numbered shards (`01-base.css` … `27-agent.css`), each one
+  owning a single concern, each **≤ 500 lines**. If a shard crosses that,
+  split it and give the new piece the next sequential number.
+- The static check asserts the presence of a subset of these shards
+  (`01-base`, `04-header`, `18-dark-mode`, `23-demos-section`, `27-agent`).
+  Keep those names stable; renaming requires updating the checker.
+- Dark mode rules live in `18-dark-mode.css`, all scoped under `body.dark`.
+  Don't sprinkle `body.dark ...` selectors across other shards.
+- Keep `url(...)` references relative (e.g. `../../images/foo.png`) so they
+  resolve both in dev and in the built `dist/`.
+
+## `index.html` shell
+
+- The shell is intentionally tiny. It must keep these invariants (all asserted
+  in `check-structure.mjs` / `smoke.mjs`):
+  - `<main id="main">` exists
+  - `<div id="preloader">` exists
+  - `<script type="module" src="/src/main.js">` is the sole entry
+- New third-party origins must get a `<link rel="preconnect">` (if used on
+  first paint) or `<link rel="dns-prefetch">` (if used lazily).
+- Above-the-fold images (e.g. logo) should have `<link rel="preload" as="image">`.
+- Never inline `<script>` logic — put it in a module and register it via
+  the pipeline.
+
+## Images / media
+
+- Prefer `loading="lazy"` on `<img>` below the fold (see `demo-masonry.js`
+  for the pattern).
+- Large demo videos go under `public/assets/videos/` and are referenced
+  from `demos-data.js`; the demo viewer handles play/pause lifecycle.

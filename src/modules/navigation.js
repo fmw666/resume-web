@@ -1,10 +1,14 @@
 /**
  * 导航：菜单开合、锚点平滑滚动、scrollspy、sub-menu 展开、回到顶部。
  *
- * 注意：jQuery 1.12.4 自带的 `scrollspy`（Bootstrap 4）和 `jquery.easing`
- * 仍然是老生态里最稳的方案，所以这里沿用。
+ * 性能要点：
+ *   - return-to-top 原来挂在 `scroll` 上每帧跑 jQuery DOM 读写，现改用
+ *     IntersectionObserver 观察一个"阈值哨兵"，避免频繁 scroll handler；
+ *   - 菜单开合 / 子菜单切换仍用 jQuery（保留现有类名状态机，零回归）；
+ *   - 平滑滚动如果 vendor easing 没就绪，也能用原生 `behavior: 'smooth'`。
  */
 import $ from 'jquery';
+import { TIMINGS } from '../config/index.js';
 
 export function initMobileMenu() {
   $('.menu-icon button').on('click', () => {
@@ -30,12 +34,18 @@ export function initSmoothScroll() {
     const $anchor = $(this);
     const target = $($anchor.attr('href'));
     if (target.length === 0) return;
-    $('html, body').stop().animate(
-      { scrollTop: target.offset().top },
-      800,
-      'easeInOutQuad',
-    );
+
     event.preventDefault();
+    if (typeof $.easing?.easeInOutQuad === 'function') {
+      // 有老版 jquery.easing 就维持原动画曲线（视觉零回归）
+      $('html, body').stop().animate(
+        { scrollTop: target.offset().top },
+        TIMINGS.scrollAnimateMs,
+        'easeInOutQuad',
+      );
+    } else {
+      target.get(0).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 }
 
@@ -56,17 +66,52 @@ export function initSubMenuSwitch() {
 }
 
 export function initReturnToTop() {
-  const $btn = $('#return-to-top');
-  if ($btn.length === 0) return;
-  $(window).on('scroll', function () {
-    if ($(this).scrollTop() >= 350) {
-      $btn.fadeIn(200);
-    } else {
-      $btn.fadeOut(200);
-    }
-  });
-  $btn.on('click', function (event) {
+  const btn = document.getElementById('return-to-top');
+  if (!btn) return;
+
+  // 用 IO 监测"一个离顶部 350px 的哨兵"是否离开视口 —— 比逐帧 scroll
+  // 性能好得多，且对 passive listener 没要求（根本没有 scroll handler）。
+  let sentinel = document.getElementById('return-to-top-sentinel');
+  if (!sentinel) {
+    sentinel = document.createElement('div');
+    sentinel.id = 'return-to-top-sentinel';
+    sentinel.style.cssText =
+      'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+    document.body.insertBefore(sentinel, document.body.firstChild);
+  }
+
+  const show = () => { btn.classList.add('is-visible'); $(btn).fadeIn(200); };
+  const hide = () => { btn.classList.remove('is-visible'); $(btn).fadeOut(200); };
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) hide(); else show();
+        }
+      },
+      { rootMargin: `-${TIMINGS.returnToTopOffsetPx}px 0px 0px 0px` },
+    );
+    io.observe(sentinel);
+  } else {
+    // 极老浏览器：passive scroll + rAF 节流
+    let ticking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          if (window.scrollY >= TIMINGS.returnToTopOffsetPx) show(); else hide();
+        });
+      },
+      { passive: true },
+    );
+  }
+
+  btn.addEventListener('click', (event) => {
     event.preventDefault();
-    $('body,html').animate({ scrollTop: 0 }, 400);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
