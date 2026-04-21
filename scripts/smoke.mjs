@@ -93,6 +93,7 @@ async function main() {
   console.log('\n[1] DOM sections injected');
   const domInfo = await page.evaluate(() => ({
     home: !!document.getElementById('home'),
+    agent: !!document.getElementById('agent'),
     about: !!document.getElementById('about'),
     services: !!document.getElementById('services'),
     experience: !!document.getElementById('experience'),
@@ -167,6 +168,28 @@ async function main() {
   assert(viewer.title.length > 0, 'demo viewer has a title');
   await page.evaluate(() => document.querySelector('.dv-close')?.click());
   await sleep(200);
+
+  // ── 6b) For-Your-Agent: 点击 copy 按钮 → 按钮标记为 is-copied ────
+  console.log('\n[6b] Agent clipboard copy button');
+  await page.evaluate(() => {
+    document.getElementById('agent')?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  });
+  await sleep(200);
+  // 注入一个 clipboard polyfill，避免 headless chrome 无权限时直接抛
+  await page.evaluate(() => {
+    if (!navigator.clipboard) {
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: () => Promise.resolve() },
+      });
+    }
+  });
+  await page.evaluate(() => document.getElementById('agent-copy-btn')?.click());
+  await sleep(100);
+  const copiedFlash = await page.evaluate(() => {
+    const btn = document.getElementById('agent-copy-btn');
+    return !!btn && btn.classList.contains('is-copied');
+  });
+  assert(copiedFlash, 'agent copy button toggles .is-copied after click');
 
   // ── 7) 主题切换写入 localStorage + body class ───
   console.log('\n[7] Theme toggle');

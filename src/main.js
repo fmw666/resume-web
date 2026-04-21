@@ -36,6 +36,7 @@ import {
   applyDataAttrs,
 } from './modules/animations.js';
 import { initSelfIntroAudio } from './modules/self-intro.js';
+import { initAgentCopy } from './modules/agent.js';
 import { initPortfolioLazy } from './modules/portfolio.js';
 import { initTestimonialsLazy } from './modules/testimonials.js';
 import { initContactForm } from './modules/contact.js';
@@ -73,8 +74,9 @@ async function boot() {
   initSkillBars();
   initWow();
 
-  // 5. About 音频 + Contact 表单
+  // 5. About 音频 + For-Your-Agent 剪贴板 + Contact 表单
   initSelfIntroAudio();
+  initAgentCopy();
   initContactForm();
 
   // 6. 懒加载

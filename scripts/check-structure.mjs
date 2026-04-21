@@ -56,6 +56,7 @@ const REQUIRED_MODULES = [
   'navigation.js',
   'animations.js',
   'self-intro.js',
+  'agent.js',
   'portfolio.js',
   'testimonials.js',
   'contact.js',
@@ -73,6 +74,7 @@ REQUIRED_MODULES.forEach((m) => {
 console.log('\n[3] Section HTML partials present');
 const REQUIRED_SECTIONS = [
   'home.html',
+  'agent.html',
   'about.html',
   'services.html',
   'experience.html',
@@ -131,6 +133,7 @@ function hasRealImport(modulePath) {
   './modules/navigation.js',
   './modules/animations.js',
   './modules/self-intro.js',
+  './modules/agent.js',
   './modules/portfolio.js',
   './modules/testimonials.js',
   './modules/contact.js',
@@ -144,7 +147,7 @@ function hasRealImport(modulePath) {
 // ── 6) sections.js 必须按既定顺序引用 8 个区块 ────
 console.log('\n[6] sections.js imports the 8 canonical page sections in order');
 const sectionsSrc = readFileSync(join(ROOT, 'src/modules/sections.js'), 'utf8');
-const SECTION_ORDER = ['home', 'about', 'services', 'experience', 'works', 'projects', 'blog', 'contact'];
+const SECTION_ORDER = ['home', 'agent', 'about', 'services', 'experience', 'works', 'projects', 'blog', 'contact'];
 let lastIndex = -1;
 let orderOk = true;
 for (const name of SECTION_ORDER) {

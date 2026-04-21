@@ -9,6 +9,7 @@
  * 顺序和原先 `sections = [...]` 数组保持一致。
  */
 import homeHtml from '../sections/home.html?raw';
+import agentHtml from '../sections/agent.html?raw';
 import aboutHtml from '../sections/about.html?raw';
 import servicesHtml from '../sections/services.html?raw';
 import experienceHtml from '../sections/experience.html?raw';
@@ -19,6 +20,7 @@ import contactHtml from '../sections/contact.html?raw';
 
 const SECTIONS_IN_ORDER = [
   homeHtml,
+  agentHtml,
   aboutHtml,
   servicesHtml,
   experienceHtml,
