@@ -1,0 +1,15 @@
+/*=================================================================*/
+/*                      SKILLS                              
+/*=================================================================*/
+.skill-item .skill-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 4px 4px 8px #575d79, -4px -4px 8px #1b1a35;
+}
+.skill-item .skill-info h4.light {
+  text-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
+}
+.skill-item .skill-info span {
+  font-size: 14px;
+}
+
