@@ -51,32 +51,45 @@
 
             <div class="agent-card-title">
               <h3 class="mb-1 mt-0 light">Hi, Agent! 👋</h3>
-              <p class="mb-0 agent-subtitle">一份给 AI / Agent 的 "Austin 说明书"</p>
+              <p class="mb-0 agent-subtitle">一份给 AI / Agent 的 &ldquo;Austin 说明书&rdquo;</p>
             </div>
           </div>
 
           <p class="agent-desc mt-4 mb-3">
-            如果你不想阅读完整内容，但又想完整了解我 —— 不妨把下面这份
-            <code class="agent-code">austion-skill.md</code>
-            链接直接喂给你的任何 <b>Agent</b> 或 <b>AI 工具</b>，它会帮你秒读我的技能索引 ✨
+            不想逐行阅读这个小站？没关系 —— 把下面这段 prompt 一键拷走，
+            粘到你的 <b>ChatGPT / Claude / Cursor / Gemini</b> 里，
+            它会自动抓取我的
+            <a class="agent-link" href="/austion-skill.md" target="_blank" rel="noopener">
+              <code class="agent-code">austion-skill.md</code>
+            </a>
+            技能索引，几秒钟秒懂 Austin ✨
           </p>
 
-          <div class="agent-url-row">
-            <div class="agent-url" id="agent-url" title="Click to copy">
-              <i class="fas fa-link agent-url-icon"></i>
-              <span class="agent-url-text">https://maovo.site/austion-skill.md</span>
+          <!-- prompt preview + copy -->
+          <div class="agent-prompt" id="agent-prompt">
+            <div class="agent-prompt-head">
+              <div class="agent-prompt-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="agent-prompt-label">
+                <i class="fas fa-terminal"></i>&ensp;prompt
+              </span>
+              <button type="button"
+                class="agent-copy-btn"
+                id="agent-copy-btn"
+                aria-label="Copy prompt">
+                <span class="agent-copy-label"><i class="far fa-copy"></i>&ensp;Copy</span>
+                <span class="agent-copy-done"><i class="fas fa-check"></i>&ensp;Copied!</span>
+              </button>
             </div>
-            <button type="button" class="btn btn-default light agent-copy-btn" id="agent-copy-btn" aria-label="Copy link">
-              <span class="agent-copy-label"><i class="far fa-copy"></i>&ensp;Copy</span>
-              <span class="agent-copy-done"><i class="fas fa-check"></i>&ensp;Copied!</span>
-            </button>
+
+            <pre class="agent-prompt-body"><code id="agent-prompt-text">read <span class="agent-prompt-url">https://maovo.site/austion-skill.md</span> and help me get to know Austin, this independent developer</code></pre>
           </div>
 
           <div class="agent-hint mt-3">
             <i class="icon-magic-wand"></i>
             <span>
-              复制链接 → 粘贴到 <b>ChatGPT / Claude / Cursor / 任何 Agent</b> →
-              让它帮你快速索引 Austin 的技能栈。
+              一键 Copy → 粘到任意 Agent → 让它替你秒读 Austin 的技能栈、履历与联系方式。
             </span>
           </div>
         </div>
@@ -85,32 +98,33 @@
       <div class="col-lg-5 mt-4 mt-lg-0">
         <!-- cute tip card -->
         <div class="agent-tip rounded padding-30 shadow-dark light wow fadeInUp" data-wow-delay="0.15s">
-          <div class="agent-tip-badge">
-            <span class="agent-tip-dot"></span>
-            <span>Tips from Austin</span>
+          <!-- floating sparkles -->
+          <div class="agent-sparkles" aria-hidden="true">
+            <span class="spark s1"></span>
+            <span class="spark s2"></span>
+            <span class="spark s3"></span>
+            <span class="spark s4"></span>
           </div>
 
-          <div class="agent-tip-body">
-            <!-- floating sparkles -->
-            <div class="agent-sparkles" aria-hidden="true">
-              <span class="spark s1"></span>
-              <span class="spark s2"></span>
-              <span class="spark s3"></span>
-              <span class="spark s4"></span>
-              <span class="spark s5"></span>
+          <div class="agent-tip-head">
+            <div class="agent-tip-badge">
+              <span class="agent-tip-dot"></span>
+              <span>Tips from Austin</span>
             </div>
-
             <div class="agent-tip-heart" aria-hidden="true">
-              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
                 <path d="M23.6 4c-2.3 0-4.3 1.2-5.6 3-1.3-1.8-3.3-3-5.6-3C8.9 4 6 6.9 6 10.5c0 7 10 13.5 12 13.5s12-6.5 12-13.5C30 6.9 27.1 4 23.6 4z" fill="#FF4C60"/>
               </svg>
             </div>
+          </div>
 
+          <div class="agent-tip-body">
             <p class="agent-tip-text mb-0">
               当然啦，更推荐你亲自逛一逛这个小站 —— 它是用
-              <b>"古法编程"</b>纯手搓的：没有 React，没有 Next.js，
+              <b>&ldquo;古法编程&rdquo;</b> 纯手搓的：没有 React，没有 Next.js，
               只有 HTML / CSS / JS 和一点点 Python 胶水 🍯。
-              <br/><br/>
+            </p>
+            <p class="agent-tip-text mb-0 mt-3">
               希望这里的审美能让你会心一笑，也祝你获得一次愉快的体验 ✨
             </p>
           </div>
