@@ -1,5 +1,5 @@
 /**
- * For-Your-Agent：点击 URL 或 Copy 按钮把 skill.md 链接复制到剪贴板。
+ * For-Your-Agent：点击 Copy 按钮把"读 skill.md 的 prompt"复制到剪贴板。
  *
  * 迁自原 custom.js。优先用 async Clipboard API，失败或不支持时降级到
  * `document.execCommand('copy')`。
@@ -7,6 +7,7 @@
 import $ from 'jquery';
 
 const AGENT_URL = 'https://maovo.site/austion-skill.md';
+const AGENT_PROMPT = `read ${AGENT_URL} and help me get to know Austin, this independent developer`;
 
 function fallbackCopy(text) {
   const ta = document.createElement('textarea');
@@ -23,18 +24,18 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-function doCopy() {
+function doCopy(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(AGENT_URL).catch(() => fallbackCopy(AGENT_URL));
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
   }
-  fallbackCopy(AGENT_URL);
+  fallbackCopy(text);
   return Promise.resolve();
 }
 
 export function initAgentCopy() {
   const $btn = $('#agent-copy-btn');
-  const $urlBox = $('#agent-url');
-  if ($btn.length === 0 && $urlBox.length === 0) return;
+  const $promptBox = $('#agent-prompt');
+  if ($btn.length === 0 && $promptBox.length === 0) return;
 
   function flashCopied() {
     $btn.addClass('is-copied');
@@ -43,11 +44,14 @@ export function initAgentCopy() {
 
   $btn.on('click', (e) => {
     e.preventDefault();
-    doCopy().then(flashCopied);
+    e.stopPropagation();
+    doCopy(AGENT_PROMPT).then(flashCopied);
   });
 
-  $urlBox.on('click', (e) => {
+  $promptBox.on('click', (e) => {
+    // allow the inner <a> (link to austion-skill.md) to work normally
+    if (e.target && e.target.closest && e.target.closest('a')) return;
     e.preventDefault();
-    doCopy().then(flashCopied);
+    doCopy(AGENT_PROMPT).then(flashCopied);
   });
 }
