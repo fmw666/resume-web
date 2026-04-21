@@ -137,6 +137,32 @@ npm run test:smoke  # build + preview + Puppeteer 端到端冒烟（带退出码
 
 PR 若任一步失败会被标红、阻止合并。
 
+### 自动 merge + main 分支保护
+
+仓库还启用了两条工作流来省掉手工 merge：
+
+- **`.github/workflows/auto-merge.yml`** —— PR 一旦 ready（非 draft），且满足下面任一
+  条件，就会被放进 GitHub 原生的 auto-merge 队列，CI 绿后自动 squash 合入 + 删源分支：
+  - PR 贴了 `auto-merge` 标签；
+  - PR 源分支以 `cursor/` 开头（给 Cursor Cloud Agent 用的默认通道）；
+  - PR 作者是仓库 owner。
+- **`scripts/setup-branch-protection.sh`** —— 一键给 `main` 配好分支保护：
+  - 禁止任何人直接 commit / push 到 `main`（强制走 PR）；
+  - 要求 `build + test` 状态检查通过；
+  - 禁止 force-push / 删除 `main`；
+  - 要求线性历史 + 所有对话 resolved；
+  - 管理员同样受限（可按需改成豁免）。
+  
+  运行一次即可（需已 `gh auth login`）：
+  ```bash
+  bash scripts/setup-branch-protection.sh
+  ```
+  想撤销：`gh api -X DELETE /repos/:owner/:repo/branches/main/protection`。
+
+> ⚠️ 仓库还需要手动打开一次 **Settings → General → Pull Requests → Allow auto-merge**
+> 的全局开关（`setup-branch-protection.sh` 会帮你通过 API 自动打开，但某些组织策略
+> 下仍需人工确认）。
+
 ## 🐛 Known Issues
 
 - 移动端「Recent Works」下拉框样式异常
