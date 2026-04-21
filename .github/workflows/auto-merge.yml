@@ -1,0 +1,40 @@
+name: Auto-merge
+
+# 让符合条件的 PR 自动进入 GitHub 的「auto-merge」队列：
+# 一旦所有必需的状态检查（ci.yml）通过 + 没有冲突，GitHub 会自动 squash-merge 并删源分支。
+#
+# 触发条件：
+#   - PR opened / reopened / ready_for_review / 打上 `auto-merge` 标签
+#   - 且 PR 不是 draft
+#   - 且 PR 满足下列任一："auto-merge" 标签 / 来自 cursor/ 开头的分支 / 作者是仓库 owner
+#
+# 仓库前置要求（一次性）：
+#   1. Settings → General → Pull Requests → ✅ Allow auto-merge
+#   2. Settings → Branches → main 分支保护规则里勾选 "Require status checks" 并选 `build + test`
+#      （可直接运行 scripts/setup-branch-protection.sh 一键完成）
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, labeled, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    name: enable auto-merge
+    runs-on: ubuntu-latest
+    if: >-
+      !github.event.pull_request.draft &&
+      (
+        contains(github.event.pull_request.labels.*.name, 'auto-merge') ||
+        startsWith(github.event.pull_request.head.ref, 'cursor/') ||
+        github.event.pull_request.user.login == github.repository_owner
+      )
+    steps:
+      - name: Enable auto-merge (squash)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
