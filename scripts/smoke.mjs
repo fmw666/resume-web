@@ -191,17 +191,34 @@ async function main() {
   });
   assert(copiedFlash, 'agent copy button toggles .is-copied after click');
 
-  // ── 7) 主题切换写入 localStorage + body class ───
-  console.log('\n[7] Theme toggle');
+  // ── 7) 主题切换：light → dark → light 可逆 ──────────────────
+  console.log('\n[7] Theme toggle (round-trip)');
   const themeBefore = await page.evaluate(() => localStorage.getItem('theme'));
+
+  // light → dark
   await page.evaluate(() => document.getElementById('theme-icon')?.click());
   await sleep(300);
-  const themed = await page.evaluate(() => ({
+  const themedDark = await page.evaluate(() => ({
     theme: localStorage.getItem('theme'),
     bodyDark: document.body.classList.contains('dark'),
+    lightCount: document.querySelectorAll('.light').length,
   }));
-  assert(themeBefore !== themed.theme, `theme flipped (${themeBefore} -> ${themed.theme})`);
-  assert(themed.bodyDark || themed.theme === 'light', 'theme state consistent');
+  assert(themeBefore !== themedDark.theme, `theme flipped (${themeBefore} -> ${themedDark.theme})`);
+  assert(themedDark.bodyDark, 'body.dark present in dark mode');
+  // strip 完全：dark 模式下不应残留任何 `.light`
+  assertEq(themedDark.lightCount, 0, 'no .light elements remain in dark mode');
+
+  // dark → light
+  await page.evaluate(() => document.getElementById('theme-icon')?.click());
+  await sleep(300);
+  const themedBack = await page.evaluate(() => ({
+    theme: localStorage.getItem('theme'),
+    bodyDark: document.body.classList.contains('dark'),
+    lightCount: document.querySelectorAll('.light').length,
+  }));
+  assertEq(themedBack.theme, themeBefore, 'theme restored after round-trip');
+  assertEq(themedBack.bodyDark, false, 'body.dark removed after round-trip');
+  assertGte(themedBack.lightCount, 50, '.light elements restored after dark→light');
 
   // ── 8) Preloader 已消失 ────────────────────────
   console.log('\n[8] Preloader hidden');

@@ -55,6 +55,7 @@ const REQUIRED_MODULES = [
   'preloader.js',
   'navigation.js',
   'animations.js',
+  'dom-utils.js',
   'self-intro.js',
   'agent.js',
   'portfolio.js',
@@ -65,6 +66,10 @@ const REQUIRED_MODULES = [
   'demo-viewer.js',
   'demos-data.js',
   'vendor-loader.js',
+  // demo-viewer 的三个子模块（SRP 拆分）
+  'demos/demo-masonry.js',
+  'demos/demo-arc.js',
+  'demos/demo-fullscreen.js',
 ];
 REQUIRED_MODULES.forEach((m) => {
   must(fileExists(`src/modules/${m}`), `module: src/modules/${m}`);
@@ -92,6 +97,11 @@ REQUIRED_SECTIONS.forEach((s) => {
 console.log('\n[4] public/assets required files present');
 [
   'public/assets/css/style.css',
+  'public/assets/css/style/01-base.css',
+  'public/assets/css/style/04-header.css',
+  'public/assets/css/style/18-dark-mode.css',
+  'public/assets/css/style/23-demos-section.css',
+  'public/assets/css/style/27-agent.css',
   'public/assets/css/bootstrap.min.css',
   'public/assets/js/wow.min.js',
   'public/assets/js/parallax.min.js',
@@ -132,6 +142,7 @@ function hasRealImport(modulePath) {
   './modules/preloader.js',
   './modules/navigation.js',
   './modules/animations.js',
+  './modules/dom-utils.js',
   './modules/self-intro.js',
   './modules/agent.js',
   './modules/portfolio.js',
@@ -144,8 +155,8 @@ function hasRealImport(modulePath) {
   must(hasRealImport(p), `main.js imports ${p}`);
 });
 
-// ── 6) sections.js 必须按既定顺序引用 8 个区块 ────
-console.log('\n[6] sections.js imports the 8 canonical page sections in order');
+// ── 6) sections.js 必须按既定顺序引用 9 个区块 ────
+console.log('\n[6] sections.js imports the 9 canonical page sections in order');
 const sectionsSrc = readFileSync(join(ROOT, 'src/modules/sections.js'), 'utf8');
 const SECTION_ORDER = ['home', 'agent', 'about', 'services', 'experience', 'works', 'projects', 'blog', 'contact'];
 let lastIndex = -1;
@@ -162,6 +173,22 @@ for (const name of SECTION_ORDER) {
   lastIndex = at;
 }
 must(orderOk, 'sections imports appear in canonical order');
+
+// ── 6b) demo-viewer.js 必须委托给 3 个子模块（SRP 防回归）──
+console.log('\n[6b] demo-viewer.js delegates to three sub-modules');
+const dvSrc = readFileSync(join(ROOT, 'src/modules/demo-viewer.js'), 'utf8')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/^[ \t]*\/\/.*$/gm, '');
+[
+  './demos/demo-masonry.js',
+  './demos/demo-arc.js',
+  './demos/demo-fullscreen.js',
+].forEach((p) => {
+  must(
+    dvSrc.includes(`'${p}'`) || dvSrc.includes(`"${p}"`),
+    `demo-viewer.js imports ${p}`,
+  );
+});
 
 // ── 7) index.html 必须挂载 main.js 作为 ES module ─
 console.log('\n[7] index.html wires /src/main.js');
