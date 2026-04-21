@@ -3681,6 +3681,13 @@ section.agent {
   padding-bottom: 40px;
   position: relative;
 }
+/* Neutralize the global `section span { color: #fff }` / `section.light span { color: #5E5C7F }`
+   rules so that agent-scoped spans can carry their own palette across themes. */
+section.agent span,
+section.agent.light span,
+body.dark section.agent span {
+  color: inherit;
+}
 
 /* ── main card ─────────────────────────────────── */
 .agent-card {
@@ -3788,6 +3795,7 @@ section.agent {
   font-size: 0.92em;
   font-family: "Rubik", "SF Mono", Menlo, Consolas, monospace;
   white-space: nowrap;
+  word-break: keep-all;
 }
 
 /* ── prompt preview card (terminal-like) ───────── */
@@ -3817,6 +3825,7 @@ section.agent {
   padding: 10px 14px;
   background: linear-gradient(180deg, #2a2852 0%, #232146 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
 }
 .agent-prompt-dots {
   display: inline-flex;
@@ -3855,6 +3864,7 @@ section.agent {
   color: #e7e6ff;
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: anywhere;
   overflow-x: hidden;
 }
 .agent-prompt-body code {
@@ -4076,7 +4086,8 @@ body.dark section.agent .agent-prompt-head {
 }
 body.dark section.agent .agent-hint {
   color: #cdcbe3;
-  background: rgba(255, 209, 92, 0.08);
+  background: rgba(255, 209, 92, 0.10);
+  border-left-color: #FFD15C;
 }
 body.dark section.agent .agent-tip {
   background: linear-gradient(135deg, #302f4e 0%, #2a2945 100%);
@@ -4084,6 +4095,25 @@ body.dark section.agent .agent-tip {
 body.dark section.agent .agent-tip-badge {
   color: #b8b8ff;
   background: rgba(108, 108, 229, 0.22);
+}
+body.dark section.agent .agent-card-title h3,
+body.dark section.agent .agent-card-title h3.light {
+  color: #fff;
+  text-shadow: none;
+}
+body.dark section.agent .agent-prompt-label {
+  color: #b6b5d8;
+}
+body.dark section.agent .agent-prompt-url {
+  color: #a5a5ff;
+  text-decoration-color: rgba(165, 165, 255, 0.4);
+}
+
+/* ── tablet (landscape phones & narrow tablets) ── */
+@media (max-width: 991px) {
+  .agent-prompt-body {
+    font-size: 13.5px;
+  }
 }
 
 /* ── mobile ────────────────────────────────────── */
@@ -4096,9 +4126,24 @@ body.dark section.agent .agent-tip-badge {
     text-align: center;
     gap: 14px;
   }
+  .agent-avatar {
+    width: 76px;
+    height: 76px;
+    flex-basis: 76px;
+  }
+  .agent-robot {
+    width: 60px;
+    height: 60px;
+  }
+  .agent-card-title h3 {
+    font-size: 20px;
+  }
+  .agent-desc {
+    font-size: 14.5px;
+  }
   .agent-prompt-head {
-    flex-wrap: wrap;
     gap: 8px;
+    padding: 10px 12px;
   }
   .agent-prompt-label {
     order: 2;
@@ -4108,12 +4153,43 @@ body.dark section.agent .agent-tip-badge {
     order: 3;
     width: 100%;
     min-width: 0;
+    padding: 9px 16px;
   }
   .agent-prompt-body {
-    padding: 16px;
+    padding: 14px 16px;
     font-size: 13px;
+    line-height: 1.7;
+  }
+  .agent-hint {
+    font-size: 13px;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .agent-hint i {
+    font-size: 16px;
+    margin-top: 2px;
   }
   .agent-tip-head {
     flex-wrap: wrap;
+    gap: 10px;
+  }
+  .agent-tip-text {
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
+  .agent-sparkles .spark {
+    display: none;
+  }
+}
+
+/* ── very narrow ───────────────────────────────── */
+@media (max-width: 360px) {
+  .agent-prompt-body {
+    font-size: 12.5px;
+    padding: 12px 14px;
+  }
+  .agent-card,
+  .agent-tip {
+    padding: 20px !important;
   }
 }
