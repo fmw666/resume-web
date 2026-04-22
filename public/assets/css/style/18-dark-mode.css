@@ -52,8 +52,8 @@ body.dark .content-blog,
 body.dark .blog-page-section {
   background: #353353;
 }
-body.dark .bg-white {
-  background-color: #353353 !important;
+body.dark .bg-surface {
+  background-color: #353353;
 }
 body.dark section#projects {
   background: #353353;
