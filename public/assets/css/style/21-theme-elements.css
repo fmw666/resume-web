@@ -314,8 +314,14 @@ body.dark .chatbot-placeholder {
   border-radius: 20px !important;
 }
 
-.bg-white {
-  background: #e0e5ec !important;
+/* Neumorphism card surface. This project is neumorphism-first: every "card"
+   shares the section background color and relies on `.shadow-dark` (inner/outer
+   shadows) for lift. The previous class name `.bg-white` clashed semantically
+   (it isn't white and isn't even close) and required `!important` just to beat
+   Bootstrap's own `.bg-white { background: #fff !important }`. Rename to
+   `.bg-surface` — descriptive, conflict-free, `!important` no longer needed. */
+.bg-surface {
+  background: #e0e5ec;
 }
 
 .shadow-dark, .desktop-header-3 .dropdown-menu, .form-control, .form-control:focus {
