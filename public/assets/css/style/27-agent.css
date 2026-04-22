@@ -18,7 +18,6 @@ body.dark section.agent span {
 .agent-card {
   position: relative;
   overflow: hidden;
-  height: 100%;
 }
 .agent-card:before {
   content: "";
@@ -181,12 +180,18 @@ body.dark section.agent span {
 }
 
 .agent-prompt-body {
+  /* Neutralize the global `pre` defaults (bg #e0e5ec + 1px border + radius)
+     which would otherwise leak a light rectangle inside this dark terminal card
+     and clash with the light text color. */
   margin: 0;
   padding: 18px 20px;
   font-family: "Rubik", "SF Mono", Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.75;
   color: #e7e6ff;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
@@ -284,9 +289,6 @@ body.dark section.agent span {
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #ffffff 0%, #f3f5ff 100%);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 .agent-tip-head {
   display: flex;
@@ -339,7 +341,6 @@ body.dark section.agent span {
   position: relative;
   z-index: 2;
   margin-top: 20px;
-  flex: 1 1 auto;
 }
 .agent-tip-text {
   line-height: 1.9;
@@ -363,10 +364,10 @@ body.dark section.agent span {
   opacity: 0;
   animation: agent-spark 3.4s ease-in-out infinite;
 }
-.agent-sparkles .spark.s1 { left: 10%; top: 62%; background: #FFD15C; animation-delay: 0s; }
-.agent-sparkles .spark.s2 { left: 88%; top: 78%; background: #FF4C60; animation-delay: .8s; width: 6px; height: 6px; }
-.agent-sparkles .spark.s3 { left: 24%; top: 88%; background: #6C6CE5; animation-delay: 1.6s; width: 5px; height: 5px; }
-.agent-sparkles .spark.s4 { left: 70%; top: 50%; background: #44D7B6; animation-delay: 2.2s; width: 7px; height: 7px; }
+.agent-sparkles .spark.s1 { left: 8%;  top: 68%; background: #FFD15C; animation-delay: 0s; }
+.agent-sparkles .spark.s2 { left: 92%; top: 45%; background: #FF4C60; animation-delay: .8s;  width: 6px; height: 6px; }
+.agent-sparkles .spark.s3 { left: 44%; top: 82%; background: #6C6CE5; animation-delay: 1.6s; width: 5px; height: 5px; }
+.agent-sparkles .spark.s4 { left: 76%; top: 70%; background: #44D7B6; animation-delay: 2.2s; width: 7px; height: 7px; }
 @keyframes agent-spark {
   0%, 100% { opacity: 0; transform: rotate(45deg) scale(0.3); }
   40%      { opacity: 1; transform: rotate(45deg) scale(1); }

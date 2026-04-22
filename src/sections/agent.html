@@ -8,44 +8,84 @@
     <div class="spacer light" data-height="60"></div>
 
     <div class="row align-items-stretch">
-      <div class="col-lg-7">
+      <div class="col-12">
         <!-- main card -->
         <div class="agent-card rounded bg-white shadow-dark padding-30 light wow fadeInUp">
           <div class="agent-card-head">
             <div class="agent-avatar" aria-hidden="true">
-              <!-- cute robot SVG with blinking eyes & waving antenna -->
+              <!-- cute robot SVG: rounded head, gradient body, blinking eyes & waving antenna -->
               <svg class="agent-robot" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cute agent robot">
-                <!-- antenna -->
+                <defs>
+                  <linearGradient id="agentRobotHead" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#8a8af0"/>
+                    <stop offset="100%" stop-color="#6C6CE5"/>
+                  </linearGradient>
+                  <linearGradient id="agentRobotFace" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#f4f5ff"/>
+                    <stop offset="100%" stop-color="#d6d7ff"/>
+                  </linearGradient>
+                  <linearGradient id="agentRobotBody" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#FFE28A"/>
+                    <stop offset="100%" stop-color="#FFC64A"/>
+                  </linearGradient>
+                  <radialGradient id="agentRobotGloss" cx="0.3" cy="0.25" r="0.7">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+                    <stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+
+                <!-- soft shadow under the robot -->
+                <ellipse cx="60" cy="112" rx="26" ry="3.5" fill="#1b1a35" opacity="0.12"/>
+
+                <!-- antenna with waving bulb -->
                 <g class="robot-antenna">
-                  <line x1="60" y1="18" x2="60" y2="32" stroke="#6C6CE5" stroke-width="3" stroke-linecap="round"/>
-                  <circle cx="60" cy="14" r="5" fill="#FF4C60"/>
-                  <circle cx="60" cy="14" r="2" fill="#fff" opacity=".75"/>
+                  <line x1="60" y1="16" x2="60" y2="30" stroke="#6C6CE5" stroke-width="3" stroke-linecap="round"/>
+                  <circle cx="60" cy="12" r="5.5" fill="#FF4C60"/>
+                  <circle cx="58.5" cy="10.5" r="1.8" fill="#fff" opacity=".85"/>
                 </g>
+
+                <!-- ears / side knobs -->
+                <rect x="20" y="50" width="7" height="18" rx="3" ry="3" fill="#5a5ac9"/>
+                <rect x="93" y="50" width="7" height="18" rx="3" ry="3" fill="#5a5ac9"/>
+
                 <!-- head -->
-                <rect x="24" y="32" width="72" height="58" rx="16" ry="16" fill="#6C6CE5"/>
-                <rect x="28" y="36" width="64" height="50" rx="13" ry="13" fill="#8a8af0"/>
+                <rect x="24" y="30" width="72" height="60" rx="20" ry="20" fill="url(#agentRobotHead)"/>
+                <!-- face screen -->
+                <rect x="31" y="39" width="58" height="42" rx="14" ry="14" fill="url(#agentRobotFace)"/>
+                <!-- subtle gloss on head -->
+                <rect x="24" y="30" width="72" height="60" rx="20" ry="20" fill="url(#agentRobotGloss)"/>
+
                 <!-- cheeks -->
-                <circle class="robot-cheek" cx="38" cy="70" r="4" fill="#FF4C60" opacity=".75"/>
-                <circle class="robot-cheek" cx="82" cy="70" r="4" fill="#FF4C60" opacity=".75"/>
+                <circle class="robot-cheek" cx="37" cy="66" r="4" fill="#FF4C60" opacity=".55"/>
+                <circle class="robot-cheek" cx="83" cy="66" r="4" fill="#FF4C60" opacity=".55"/>
+
                 <!-- eyes -->
                 <g class="robot-eyes">
-                  <circle cx="46" cy="58" r="7" fill="#1b1a35"/>
-                  <circle cx="74" cy="58" r="7" fill="#1b1a35"/>
-                  <circle cx="48" cy="56" r="2" fill="#fff"/>
-                  <circle cx="76" cy="56" r="2" fill="#fff"/>
+                  <circle cx="48" cy="58" r="6.5" fill="#1b1a35"/>
+                  <circle cx="72" cy="58" r="6.5" fill="#1b1a35"/>
+                  <circle cx="50" cy="56" r="2.2" fill="#fff"/>
+                  <circle cx="74" cy="56" r="2.2" fill="#fff"/>
+                  <circle cx="46.5" cy="60.5" r="1" fill="#fff" opacity=".7"/>
+                  <circle cx="70.5" cy="60.5" r="1" fill="#fff" opacity=".7"/>
                 </g>
-                <!-- eyelids for blinking -->
+                <!-- eyelids for blinking (match face-screen color so it looks like a wink) -->
                 <g class="robot-lids">
-                  <rect x="39" y="51" width="14" height="0" fill="#6C6CE5"/>
-                  <rect x="67" y="51" width="14" height="0" fill="#6C6CE5"/>
+                  <rect x="41" y="51" width="14" height="0" rx="2" ry="2" fill="#e1e2ff"/>
+                  <rect x="65" y="51" width="14" height="0" rx="2" ry="2" fill="#e1e2ff"/>
                 </g>
+
                 <!-- mouth -->
-                <path d="M48 76 Q60 84 72 76" stroke="#1b1a35" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <path d="M50 72 Q60 80 70 72" stroke="#1b1a35" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+
+                <!-- neck -->
+                <rect x="54" y="88" width="12" height="6" rx="2" ry="2" fill="#5a5ac9"/>
+
                 <!-- body -->
-                <rect x="36" y="92" width="48" height="18" rx="8" ry="8" fill="#FFD15C"/>
-                <circle cx="48" cy="101" r="2.2" fill="#1b1a35"/>
-                <circle cx="60" cy="101" r="2.2" fill="#1b1a35"/>
-                <circle cx="72" cy="101" r="2.2" fill="#1b1a35"/>
+                <rect x="32" y="92" width="56" height="20" rx="10" ry="10" fill="url(#agentRobotBody)"/>
+                <!-- body buttons -->
+                <circle cx="47" cy="102" r="2.2" fill="#FF4C60"/>
+                <circle cx="60" cy="102" r="2.2" fill="#6C6CE5"/>
+                <circle cx="73" cy="102" r="2.2" fill="#44D7B6"/>
               </svg>
             </div>
 
@@ -96,8 +136,8 @@
         </div>
       </div>
 
-      <div class="col-lg-5 mt-4 mt-lg-0">
-        <!-- cute tip card -->
+      <div class="col-12 mt-4">
+        <!-- cute tip card (sits below the main card, full width) -->
         <div class="agent-tip rounded padding-30 shadow-dark light wow fadeInUp" data-wow-delay="0.15s">
           <!-- floating sparkles -->
           <div class="agent-sparkles" aria-hidden="true">
