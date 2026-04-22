@@ -11,8 +11,11 @@
   <!-- 关键第三方 origin：提前握手，省掉实际请求时的 DNS + TLS 往返。 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://cdn.botpress.cloud">
-  <link rel="dns-prefetch" href="https://files.bpcontent.cloud">
+  <!-- Botpress iframe 在 window.load 之后才预热，这里 preconnect 先把
+       TLS 握好，真正下载时就只差一次 RTT。crossorigin 必须带，iframe
+       子资源是跨源的。 -->
+  <link rel="preconnect" href="https://cdn.botpress.cloud" crossorigin>
+  <link rel="preconnect" href="https://files.bpcontent.cloud" crossorigin>
   <link rel="dns-prefetch" href="https://formspree.io">
 
   <!-- Logo & avatar 是 above-the-fold 的关键图片，提前 preload 降低 LCP。 -->
