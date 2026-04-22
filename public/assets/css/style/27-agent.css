@@ -18,86 +18,256 @@ body.dark section.agent span {
 .agent-card {
   position: relative;
   overflow: hidden;
+  padding: 40px 44px !important;
 }
 .agent-card:before {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(520px 220px at -10% 120%, rgba(108, 108, 229, 0.12), transparent 60%),
-    radial-gradient(420px 180px at 110% -20%, rgba(255, 76, 96, 0.10), transparent 60%);
+    radial-gradient(600px 260px at -8% 110%, rgba(108, 108, 229, 0.14), transparent 60%),
+    radial-gradient(520px 240px at 108% -10%, rgba(255, 76, 96, 0.11), transparent 60%),
+    radial-gradient(380px 200px at 50% -20%, rgba(68, 215, 182, 0.08), transparent 60%);
   pointer-events: none;
 }
 .agent-card > * { position: relative; }
 
-.agent-card-head {
-  display: flex;
-  align-items: center;
-  gap: 18px;
+/* 顶部 3px 彩虹指示条：从 ChatGPT 绿 → Claude 橙 → Gemini 四色 → 站点紫，
+   给整张卡"一眼就知道是给 AI 的"的视觉锚点。 */
+.agent-card-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #10A37F 0%,
+    #D97757 22%,
+    #4285F4 40%,
+    #9168C0 55%,
+    #E8416F 70%,
+    #F5B84A 82%,
+    #6C6CE5 100%
+  );
+  z-index: 3;
+  opacity: 0.9;
 }
 
-.agent-avatar {
-  width: 84px;
-  height: 84px;
-  flex: 0 0 84px;
-  border-radius: 22px;
-  /* 纯色 background：浏览器对 linear-gradient 的插值过渡不可靠，改纯色
-     后能直接搭上全局 `* { transition: all .3s }`，切主题时平滑一致。 */
-  background: #f1f3fb;
-  box-shadow: 6px 6px 14px #b8bccf, -6px -6px 14px #ffffff;
+.agent-card-head {
   display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.agent-card-head-top {
+  margin-bottom: 4px;
+}
+
+/* ── brand strip：横向一行 9 chips + 引导语 ─────
+   取代原来的 3x3 方块 avatar，整条横贯卡头，右边不再大片空白。
+   label 在左，chips 均匀展开，弹性靠 flex-wrap 自动换行。 */
+.agent-brands {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(108, 108, 229, 0.06), rgba(255, 76, 96, 0.04) 60%, rgba(68, 215, 182, 0.05));
+  box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.10);
+}
+.agent-brands-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #7b7ba0;
+  padding-right: 4px;
+  /* 单独占一行的 label，配合后面的一行 chips 视觉上像 "Section Title + Items"。 */
+  margin-right: auto;
+}
+.agent-brand {
+  /* ── 品牌配色的 4 槽系统 ────────────────────────────────
+     · --brand        : 浅色模式 logo 前景色
+     · --brand-bg     : 浅色模式 chip 背景染色（默认 = --brand）
+     · --brand-dark   : 暗色模式 logo 前景色（默认 = --brand）
+     · --brand-bg-dark: 暗色模式 chip 背景染色（默认 = --brand-bg）
+
+     好处：每家品牌都可以在两种主题下独立决定"logo 颜色"和"chip 染色"，
+     而不是全局用 body.dark 再 override 一遍。单家覆写即可完成主题适配。 */
+  --brand: #6C6CE5;
+  --brand-bg: var(--brand);
+  --brand-dark: var(--brand);
+  --brand-bg-dark: var(--brand-bg);
+
+  /* 固定尺寸而非 grid 百分比：横向 strip 下每个 chip 同大小更整齐，
+     SVG 用 64% 内距，比 60% 更饱满，小 logo 下细节（如 Copilot 的眼睛）不糊。 */
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  animation: agent-float 4.2s ease-in-out infinite;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--brand-bg) 12%, #ffffff);
+  color: var(--brand);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-bg) 20%, transparent);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+  cursor: default;
 }
-.agent-robot {
-  width: 70px;
-  height: 70px;
-  overflow: visible;
+.agent-brand svg {
+  width: 64%;
+  height: 64%;
+  display: block;
 }
-.agent-robot .robot-antenna {
-  transform-origin: 60px 32px;
-  animation: agent-antenna 2.8s ease-in-out infinite;
+.agent-brand:hover {
+  transform: translateY(-3px) scale(1.08);
+  background: color-mix(in srgb, var(--brand-bg) 22%, #ffffff);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--brand-bg) 38%, transparent),
+    0 8px 18px color-mix(in srgb, var(--brand-bg) 32%, transparent);
+  z-index: 2;
 }
-.agent-robot .robot-eyes {
-  transform-origin: 50% 50%;
-  animation: agent-eyes 5s ease-in-out infinite;
+
+/* ═══════════════════════════════════════════════════════════════
+   各家品牌配色（两套主题、来自官方/权威品牌资源）
+   ═══════════════════════════════════════════════════════════════
+   浅色模式 (--brand / --brand-bg)：
+     取自各家 2025 官方 brand guideline / Simple Icons 登录色。
+   暗色模式 (--brand-dark / --brand-bg-dark)：
+     · 彩色 logo 的家：提亮 10-15% 饱和度，确保深底可读性
+     · 纯黑 logo 的家：反色成亮白或品牌高光色
+     · chip 底色统一保留品牌色相，但彩度降低，和深底融合
+*/
+
+/* ChatGPT (OpenAI)：官方绿 #10A37F。暗色下提亮到 #1ABC9C 系。 */
+.agent-brand[data-brand="chatgpt"] {
+  --brand: #10A37F;
+  --brand-dark: #2DD4A4;
 }
-.agent-robot .robot-lids rect {
-  animation: agent-blink 4.6s ease-in-out infinite;
+
+/* Claude (Anthropic)：官方陶土橙 #D97757。暗色下偏粉调提亮。 */
+.agent-brand[data-brand="claude"] {
+  --brand: #D97757;
+  --brand-dark: #E8956F;
 }
-.agent-robot .robot-cheek {
-  animation: agent-cheek 3.2s ease-in-out infinite;
+
+/* Google Gemini：2025 新 logo 使用 Google 四色彩虹，logo 通过 SVG 内渐变染色，
+   这里的 --brand 只影响 chip 的 hover/border 色，用 Google 标志蓝。 */
+.agent-brand[data-brand="gemini"] {
+  --brand: #4285F4;
+  --brand-bg: #4285F4;
+  --brand-dark: #8AB4F8;
+  --brand-bg-dark: #8AB4F8;
+}
+
+/* Cursor：官方 brand guideline 深棕 #14120B，浅色 chip 底换成更有辨识度的
+   冷石灰 + 略带暖棕，和 Grok 的深紫灰、Kimi 的品牌蓝区分开。
+   暗色下 logo 反色成亮白，chip 仍保留紫相呼应站点主题。 */
+.agent-brand[data-brand="cursor"] {
+  --brand: #14120B;
+  --brand-bg: #A4A19B;
+  --brand-dark: #F7F7F4;
+  --brand-bg-dark: #8A8AF0;
+}
+
+/* Manus：logo 近黑 #171614，chip 底色用官方橙色强调 #F76B15。
+   暗色下 logo 转白，chip 保留橙相。 */
+.agent-brand[data-brand="manus"] {
+  --brand: #171614;
+  --brand-bg: #F76B15;
+  --brand-dark: #FFB28A;
+  --brand-bg-dark: #F76B15;
+}
+
+/* GitHub Copilot：Simple Icons 记录为纯黑，chip 底色用 GitHub 深灰 #24292F。
+   浅色下把 chip 调成柔和的墨绿调（Copilot Chat 官方辅色），避免全黑扎堆。
+   暗色下 logo 转亮灰白，chip 底色用 GitHub "muted" 蓝紫。 */
+.agent-brand[data-brand="copilot"] {
+  --brand: #1F2328;
+  --brand-bg: #2DA44E;
+  --brand-dark: #F6F8FA;
+  --brand-bg-dark: #58A6FF;
+}
+
+/* Grok (xAI)：xAI 官方纯黑，浅色 chip 底换成更活泼的深翠绿（xAI Earth 概念色），
+   和 Cursor 的冷灰、Copilot 的墨绿进一步分层。暗色下 logo 转白。 */
+.agent-brand[data-brand="grok"] {
+  --brand: #0F0F11;
+  --brand-bg: #3E4049;
+  --brand-dark: #FFFFFF;
+  --brand-bg-dark: #6C6CE5;
+}
+
+/* DeepSeek：LobeHub 记录官方蓝 #4D6BFE，暗色下饱和度略降、亮度升。 */
+.agent-brand[data-brand="deepseek"] {
+  --brand: #4D6BFE;
+  --brand-dark: #8B9DFF;
+}
+
+/* Kimi (Moonshot AI)：官方 brand blue #0071E3（来自 Moonshot Branding-Guide）。
+   logo 本身在官方浅色场景为近黑，色底为官方蓝；暗色下 logo 提亮、底色不变。 */
+.agent-brand[data-brand="kimi"] {
+  --brand: #1D1D1F;
+  --brand-bg: #0071E3;
+  --brand-dark: #F5F5F7;
+  --brand-bg-dark: #0071E3;
 }
 
 @keyframes agent-float {
+  /* 保留给别处用；品牌 strip 本身不再浮动 */
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
 }
-@keyframes agent-antenna {
-  0%, 100% { transform: rotate(-4deg); }
-  50%      { transform: rotate(6deg); }
-}
-@keyframes agent-blink {
-  0%, 92%, 100% { height: 0; y: 58; }
-  94%, 98%      { height: 14px; y: 51; }
-}
-@keyframes agent-eyes {
-  0%, 40%, 100% { transform: translate(0,0); }
-  50%, 70%      { transform: translate(2px, 1px); }
-}
-@keyframes agent-cheek {
-  0%, 100% { opacity: .55; }
-  50%      { opacity: .9; }
-}
 
+/* ── 标题排版 ───────────────────────────────────
+   标题、小表情、状态胶囊横排一行，比原来 "h3 + 副标题左对齐" 更现代；
+   h3 变大变粗，副标题降到 13px 灰色长句，层级清晰。 */
+.agent-card-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .agent-card-title h3 {
-  font-weight: 600;
-  font-size: 22px;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.3px;
+}
+.agent-card-wave {
+  font-size: 26px;
+  line-height: 1;
+  transform-origin: 70% 70%;
+  display: inline-block;
+  animation: agent-wave 2.4s ease-in-out infinite;
+}
+@keyframes agent-wave {
+  0%, 60%, 100% { transform: rotate(0); }
+  15%           { transform: rotate(16deg); }
+  30%           { transform: rotate(-10deg); }
+  45%           { transform: rotate(12deg); }
+}
+.agent-card-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6C6CE5;
+  background: rgba(108, 108, 229, 0.12);
+  padding: 5px 12px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.22);
 }
 .agent-subtitle {
   color: #7b7ba0;
-  font-size: 14px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin-top: 4px !important;
+  max-width: 62ch;
 }
 
 .agent-desc {
@@ -387,9 +557,35 @@ body.dark section.agent .agent-tip {
   background: #302f4e;
   box-shadow: 5px 5px 10px #212034, -5px -5px 10px #494672;
 }
-body.dark section.agent .agent-avatar {
-  background: #32304f;
-  box-shadow: 5px 5px 10px #212034, -5px -5px 10px #494672;
+body.dark section.agent .agent-brands {
+  background:
+    linear-gradient(135deg, rgba(138, 138, 240, 0.10), rgba(255, 106, 133, 0.06) 60%, rgba(68, 215, 182, 0.08));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+body.dark section.agent .agent-brands-label {
+  color: #a7a7c4;
+}
+body.dark section.agent .agent-card-pill {
+  color: #b8b8ff;
+  background: rgba(138, 138, 240, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(138, 138, 240, 0.28);
+}
+body.dark section.agent .agent-card-ribbon {
+  opacity: 1;
+}
+/* 暗色模式：用 --brand-dark / --brand-bg-dark 一键切换，每家品牌在 data-brand
+   里已声明好两套色值。这里只做"把变量指过去 + 换深底混色"的通用工作。 */
+body.dark section.agent .agent-brand {
+  --brand: var(--brand-dark);
+  --brand-bg: var(--brand-bg-dark);
+  background: color-mix(in srgb, var(--brand-bg) 22%, #1b1a35);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-bg) 30%, transparent);
+}
+body.dark section.agent .agent-brand:hover {
+  background: color-mix(in srgb, var(--brand-bg) 35%, #1b1a35);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--brand-bg) 45%, transparent),
+    0 6px 14px rgba(0, 0, 0, 0.45);
 }
 body.dark section.agent .agent-desc,
 body.dark section.agent .agent-tip-text {
@@ -451,22 +647,39 @@ body.dark section.agent .agent-prompt-url {
   section.agent {
     padding-top: 70px;
   }
+  .agent-card {
+    padding: 24px 20px !important;
+  }
   .agent-card-head {
-    flex-direction: column;
-    text-align: center;
     gap: 14px;
   }
-  .agent-avatar {
-    width: 76px;
-    height: 76px;
-    flex-basis: 76px;
+  .agent-brands {
+    gap: 8px;
+    padding: 10px 10px;
+    justify-content: flex-start;
   }
-  .agent-robot {
-    width: 60px;
-    height: 60px;
+  .agent-brands-label {
+    /* 窄屏下独占一行，避免和 chips 挤在一起 */
+    flex: 1 0 100%;
+    margin-right: 0;
+  }
+  .agent-brand {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
   }
   .agent-card-title h3 {
-    font-size: 20px;
+    font-size: 22px;
+  }
+  .agent-card-wave {
+    font-size: 22px;
+  }
+  .agent-card-pill {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+  .agent-subtitle {
+    font-size: 13.5px;
   }
   .agent-desc {
     font-size: 14.5px;
@@ -521,6 +734,54 @@ body.dark section.agent .agent-prompt-url {
   .agent-card,
   .agent-tip {
     padding: 20px !important;
+  }
+}
+
+/* ── a11y：尊重 prefers-reduced-motion ───────────
+   主卡浮动 + 品牌 chip hover 放大 这些"装饰性"动效对
+   前庭平衡敏感 / 晕动症用户不友好，开启系统"减少动态效果"
+   时全部停掉。静态元素本身仍可读，不影响信息获取。 */
+@media (prefers-reduced-motion: reduce) {
+  .agent-card-wave,
+  .agent-hint i,
+  .agent-tip-heart,
+  .agent-tip-dot,
+  .agent-sparkles .spark {
+    animation: none !important;
+  }
+  .agent-brand,
+  .agent-prompt {
+    transition: none !important;
+  }
+  .agent-brand:hover {
+    transform: none;
+  }
+}
+
+/* ── 浏览器兼容：color-mix fallback ───────────────
+   color-mix(in srgb, ...) 需要 Chrome 111+ / Safari 16.4+ / Firefox 113+。
+   对不支持的浏览器（2023 年之前的内核）统一退到中性白底 + 深描边，
+   确保识别度不崩，只是失去品牌色渲染的"马赛克墙"效果。 */
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .agent-brand {
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 0 0 1px rgba(29, 27, 58, 0.08);
+  }
+  .agent-brand:hover {
+    background: #ffffff;
+    box-shadow:
+      inset 0 0 0 1px rgba(29, 27, 58, 0.14),
+      0 6px 14px rgba(29, 27, 58, 0.18);
+  }
+  body.dark section.agent .agent-brand {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  body.dark section.agent .agent-brand:hover {
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+      0 6px 14px rgba(0, 0, 0, 0.45);
   }
 }
 
