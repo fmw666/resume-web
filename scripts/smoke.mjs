@@ -9,14 +9,53 @@
  *
  * 环境变量：
  *   SMOKE_URL        测试目标，默认 http://localhost:4173/
- *   SMOKE_CHROME     Chrome 可执行路径，默认 /usr/local/bin/google-chrome
+ *   SMOKE_CHROME     Chrome 可执行路径。不设时按平台自动探测常见位置：
+ *                      Linux  → /usr/local/bin/google-chrome / /usr/bin/google-chrome
+ *                      macOS  → /Applications/Google Chrome.app/...
+ *                      Win32  → Program Files / LOCALAPPDATA 下的 chrome.exe
  *   SMOKE_TIMEOUT    页面加载超时（ms），默认 30000
  */
 
+import { existsSync } from 'node:fs';
 import puppeteer from 'puppeteer-core';
 
+/**
+ * 跨平台找一个可用的 Chrome 可执行文件。
+ * 历史上这里硬编码成 Linux CI 的路径，Windows / macOS 本地跑要手动设
+ * SMOKE_CHROME；现在优先看环境变量，其次按 platform 扫一组已知位置，
+ * 扫不到再回退到 Linux 默认值（保持 CI 行为不变）。
+ */
+function resolveChrome() {
+  if (process.env.SMOKE_CHROME) return process.env.SMOKE_CHROME;
+  const candidates =
+    process.platform === 'win32'
+      ? [
+          `${process.env['ProgramFiles']}\\Google\\Chrome\\Application\\chrome.exe`,
+          `${process.env['ProgramFiles(x86)']}\\Google\\Chrome\\Application\\chrome.exe`,
+          `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
+          `${process.env['ProgramFiles']}\\Microsoft\\Edge\\Application\\msedge.exe`,
+        ]
+      : process.platform === 'darwin'
+      ? [
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+          '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
+          '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+        ]
+      : [
+          '/usr/local/bin/google-chrome',
+          '/usr/bin/google-chrome',
+          '/usr/bin/google-chrome-stable',
+          '/usr/bin/chromium',
+          '/usr/bin/chromium-browser',
+        ];
+  for (const p of candidates) {
+    if (p && existsSync(p)) return p;
+  }
+  return '/usr/local/bin/google-chrome';
+}
+
 const URL = process.env.SMOKE_URL || 'http://localhost:4173/';
-const CHROME = process.env.SMOKE_CHROME || '/usr/local/bin/google-chrome';
+const CHROME = resolveChrome();
 const TIMEOUT = Number(process.env.SMOKE_TIMEOUT || 30000);
 
 const failures = [];
