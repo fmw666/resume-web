@@ -82,7 +82,10 @@ src/
   is required for auto-merge routing).
 - One logical change per commit; messages use conventional prefixes:
   `feat` / `fix` / `refactor` / `perf` / `build` / `docs` / `test` / `ci`.
-- PRs default to draft; the `auto-merge` workflow will queue them on green CI.
+- Open PRs as **ready for review** (not draft). The `auto-merge` workflow
+  only triggers on non-draft PRs from `cursor/` branches (or those labelled
+  `auto-merge`); GitHub will squash-merge automatically once CI is green.
+  See `.github/workflows/auto-merge.yml` for the exact condition.
 - `main` is protected — never force-push, never commit directly.
 
 ## Comments policy (matches existing code)
