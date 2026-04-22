@@ -288,12 +288,14 @@ body.dark section.agent span {
 }
 
 /* ── tip card ──────────────────────────────────── */
+/* 和主卡 `.agent-card.bg-white` 视觉完全一致。注意：本站全局的 `.bg-white`
+   在 21-theme-elements.css 里被重定义为 #e0e5ec（neumorphism "白"），
+   而不是纯 #fff——所以这里必须显式写 #e0e5ec，不能写 #fff，
+   否则会比主卡还"白"、在浅灰 section 底上反而突兀。 */
 .agent-tip {
   position: relative;
   overflow: hidden;
-  /* 纯色替代 linear-gradient：配合全局 `* { transition: all .3s }`，切主题时
-     背景能跟上和周围元素一致的 0.3s 过渡，不再出现"瞬间跳变"。 */
-  background: #f7f9ff;
+  background: #e0e5ec;
 }
 .agent-tip-head {
   display: flex;
@@ -419,9 +421,6 @@ body.dark section.agent .agent-hint {
   color: #cdcbe3;
   background: rgba(255, 209, 92, 0.10);
   border-left-color: #FFD15C;
-}
-body.dark section.agent .agent-tip {
-  background: #2d2c49;
 }
 body.dark section.agent .agent-tip-badge {
   color: #b8b8ff;
