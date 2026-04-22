@@ -41,7 +41,9 @@ body.dark section.agent span {
   height: 84px;
   flex: 0 0 84px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #e9ecf5 0%, #f7f9ff 100%);
+  /* 纯色 background：浏览器对 linear-gradient 的插值过渡不可靠，改纯色
+     后能直接搭上全局 `* { transition: all .3s }`，切主题时平滑一致。 */
+  background: #f1f3fb;
   box-shadow: 6px 6px 14px #b8bccf, -6px -6px 14px #ffffff;
   display: flex;
   align-items: center;
@@ -147,7 +149,8 @@ body.dark section.agent span {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: linear-gradient(180deg, #2a2852 0%, #232146 100%);
+  /* 同上：切主题时原先 linear-gradient 不参与全局 0.3s 过渡，改纯色。 */
+  background: #272552;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   flex-wrap: wrap;
 }
@@ -288,7 +291,9 @@ body.dark section.agent span {
 .agent-tip {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffffff 0%, #f3f5ff 100%);
+  /* 纯色替代 linear-gradient：配合全局 `* { transition: all .3s }`，切主题时
+     背景能跟上和周围元素一致的 0.3s 过渡，不再出现"瞬间跳变"。 */
+  background: #f7f9ff;
 }
 .agent-tip-head {
   display: flex;
@@ -381,7 +386,7 @@ body.dark section.agent .agent-tip {
   box-shadow: 5px 5px 10px #212034, -5px -5px 10px #494672;
 }
 body.dark section.agent .agent-avatar {
-  background: linear-gradient(135deg, #3a3960 0%, #2a2945 100%);
+  background: #32304f;
   box-shadow: 5px 5px 10px #212034, -5px -5px 10px #494672;
 }
 body.dark section.agent .agent-desc,
@@ -408,7 +413,7 @@ body.dark section.agent .agent-prompt {
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 body.dark section.agent .agent-prompt-head {
-  background: linear-gradient(180deg, #242346 0%, #1c1b38 100%);
+  background: #20203f;
 }
 body.dark section.agent .agent-hint {
   color: #cdcbe3;
@@ -416,7 +421,7 @@ body.dark section.agent .agent-hint {
   border-left-color: #FFD15C;
 }
 body.dark section.agent .agent-tip {
-  background: linear-gradient(135deg, #302f4e 0%, #2a2945 100%);
+  background: #2d2c49;
 }
 body.dark section.agent .agent-tip-badge {
   color: #b8b8ff;
