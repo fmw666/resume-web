@@ -1,9 +1,11 @@
 /**
  * 应用入口 —— 把启动过程组织成一个 **分阶段的 pipeline**：
  *
- *   PRE_MOUNT   初始化主题（在 sections 注入前应用，避免浅色→深色闪烁）
+ *   PRE_MOUNT   主题 shell 状态（body.dark / 开关偏移），在 sections 注入
+ *               前先打好，避免浅→深闪烁
  *   MOUNT       注入 HTML sections（一次性串行，其它步骤都依赖它）
- *   POST_MOUNT  无 vendor 依赖的轻交互（导航、数据属性、隐私控制、…）
+ *   POST_MOUNT  无 vendor 依赖的轻交互（主题对 section 内部 `.light` 的
+ *               一次性同步、导航、数据属性、隐私控制、…）
  *   ENHANCE     需要核心 vendor 就绪的动画 & scrollspy
  *   DEFER       懒加载类（portfolio / testimonials / chatbot / viewer）
  *
@@ -14,7 +16,7 @@
 import './modules/jquery-global.js';
 
 import { mountSections } from './modules/sections.js';
-import { initTheme, bindThemeToggle } from './modules/theme.js';
+import { initTheme, syncThemeToSections, bindThemeToggle } from './modules/theme.js';
 import { hidePreloader } from './modules/preloader.js';
 import {
   initMobileMenu,
@@ -52,6 +54,10 @@ function buildPipeline() {
 
   pipe.register(PHASES.MOUNT, 'sections:mount', () => mountSections('#main'));
 
+  // `theme:sync` 必须在 `sections:mount` 之后才跑：sections 注入完毕后，
+  // 页面里所有带 `.light` 的节点集合才是完整的；若当前是 dark，此刻做
+  // 一次性 strip 才能避免"暗色刷新，section 内部仍呈浅色"的初始化回归。
+  pipe.register(PHASES.POST_MOUNT, 'theme:sync', syncThemeToSections);
   pipe.register(PHASES.POST_MOUNT, 'dom-attrs', applyDataAttrs);
   pipe.register(PHASES.POST_MOUNT, 'privacy', enforcePrivacy);
   pipe.register(PHASES.POST_MOUNT, 'theme:toggle', bindThemeToggle);

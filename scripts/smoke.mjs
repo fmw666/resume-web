@@ -220,6 +220,21 @@ async function main() {
   assertEq(themedBack.bodyDark, false, 'body.dark removed after round-trip');
   assertGte(themedBack.lightCount, 50, '.light elements restored after dark→light');
 
+  // ── 7b) Dark-on-reload：暗色持久化后刷新，页面不应残留任何 `.light` ────
+  // 历史回归：`initTheme` 在 `PRE_MOUNT` 阶段跑，那时 sections 还没注入，
+  // 对 section 内部的 `.light` strip 不到；`theme:sync` 补在 `POST_MOUNT`
+  // 才修掉。这条断言把该路径锁死，避免再次倒退。
+  console.log('\n[7b] Dark persists across reload');
+  await page.evaluate(() => localStorage.setItem('theme', 'dark'));
+  await page.reload({ waitUntil: 'load', timeout: TIMEOUT });
+  await sleep(3000);
+  const darkReload = await page.evaluate(() => ({
+    bodyDark: document.body.classList.contains('dark'),
+    lightCount: document.querySelectorAll('.light').length,
+  }));
+  assert(darkReload.bodyDark, 'body.dark present after reloading with theme=dark');
+  assertEq(darkReload.lightCount, 0, 'no .light elements leak into sections after dark reload');
+
   // ── 8) Preloader 已消失 ────────────────────────
   console.log('\n[8] Preloader hidden');
   const preloader = await page.evaluate(() => {
