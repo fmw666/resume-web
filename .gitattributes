@@ -1,0 +1,19 @@
+# 目的：防止 *.sh 被 Windows / 编辑器意外写成 CRLF。
+#
+# 注意：这里**没有**开启 `* text=auto eol=lf`，因为本仓库 public/ 下
+# 有历史资产（例如字体被以 .html 扩展名保存、某些 CSS 以 CRLF 入库），
+# 对它们做统一归一化会让接下来的 PR 混入大量行尾噪声，掩盖真正的改动。
+# 需要时再按文件 / 目录渐进式收紧即可。
+
+# Shell 脚本必须是 LF —— Windows 下若被写成 CRLF，bash / WSL 会直接报
+#   `$'\r': command not found`（见 scripts/setup-branch-protection.sh 的历史）
+*.sh text eol=lf
+
+# Windows 专属脚本保持 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 仓库里存在被以 .html 扩展名保存的字体二进制（public/assets/webfonts/），
+# 显式声明成 binary，避免被任何 text 规则误伤。
+public/assets/webfonts/* binary
