@@ -69,6 +69,7 @@ export const TIMINGS = Object.freeze({
   chatbotRevealDelayMs: 500,
   scrollAnimateMs: 800,
   agentCopyFlashMs: 1800,
+  agentTypewriterMs: 1600,
 });
 
 export const LAZY = Object.freeze({

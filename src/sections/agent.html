@@ -11,8 +11,8 @@
       <div class="col-12">
         <!-- main card -->
         <div class="agent-card rounded bg-surface shadow-dark padding-30 light wow fadeInUp">
-          <!-- 顶部彩色指示条：用 OpenAI 绿 → Anthropic 橙 → Google 多色 → 站点紫
-               组合的渐变，强暗示"这张卡是专门给各家 AI agent 看的"，一眼定位。 -->
+          <!-- 顶部细光带：珊瑚 → 金 → 站点紫的两端羽化渐变，只做"给卡顶加一条
+               品牌化发光线"的装饰，不再硬拼多家 agent 的品牌色。 -->
           <div class="agent-card-ribbon" aria-hidden="true"></div>
 
           <div class="agent-card-head">
@@ -92,10 +92,12 @@
 
             <div class="agent-card-title">
               <div class="agent-card-title-row">
-                <h3 class="mb-0 mt-0 light">Hi, Agent!</h3>
-                <span class="agent-card-wave" aria-hidden="true">👋</span>
                 <span class="agent-card-pill">For AI / Agents</span>
               </div>
+              <h3 class="mb-0 mt-0 light">
+                Hi, Agent!
+                <span class="agent-card-wave" aria-hidden="true">👋</span>
+              </h3>
               <p class="mb-0 agent-subtitle">
                 A cheat sheet about <b>Austin</b> — the short version,
                 curated for machines first, humans second.
@@ -103,9 +105,15 @@
             </div>
           </div>
 
-          <p class="agent-desc mt-4 mb-3">
-            Don't feel like reading this whole site? No worries — just copy the prompt below
-            and paste it into <b>ChatGPT</b>, <b>Claude</b>, <b>Cursor</b> or <b>Gemini</b>.
+          <!-- Callout: desc 从平铺段落升级为带左侧紫线的引用块，视觉上和
+               prompt 终端形成 "narrator → instruction" 的二联。 -->
+          <p class="agent-desc agent-desc--callout mt-4 mb-3">
+            Don't feel like reading this whole site? No worries — just copy the
+            prompt below and paste it into
+            <span class="agent-tag" data-brand="chatgpt">ChatGPT</span>,
+            <span class="agent-tag" data-brand="claude">Claude</span>,
+            <span class="agent-tag" data-brand="cursor">Cursor</span> or
+            <span class="agent-tag" data-brand="gemini">Gemini</span>.
             It will fetch my
             <a class="agent-link" href="/austion-skill.md" target="_blank" rel="noopener">
               <code class="agent-code">austion-skill.md</code>
@@ -131,7 +139,12 @@
               </button>
             </div>
 
-            <pre class="agent-prompt-body"><code id="agent-prompt-text">read <span class="agent-prompt-url">https://maovo.site/austion-skill.md</span> and help me get to know Austin, this independent developer</code></pre>
+            <!-- Typewriter 动效：内容对 AI/SEO 完全可读（SSR 态就是完整 prompt 文本），
+                 运行时由 agent.js 用 requestAnimationFrame 打字动画重演；
+                 prefers-reduced-motion 下跳过动画直接显示完整文本。 -->
+            <pre class="agent-prompt-body"
+                 data-typewriter=""
+                 aria-live="polite"><code id="agent-prompt-text">read <span class="agent-prompt-url">https://maovo.site/austion-skill.md</span> and help me get to know Austin, this independent developer</code></pre>
           </div>
 
           <div class="agent-hint mt-3">
@@ -141,41 +154,38 @@
               experience and contact in a blink.
             </span>
           </div>
-        </div>
-      </div>
 
-      <div class="col-12 mt-4">
-        <!-- cute tip card (sits below the main card, full width) -->
-        <div class="agent-tip rounded padding-30 shadow-dark light wow fadeInUp" data-wow-delay="0.15s">
-          <!-- floating sparkles -->
-          <div class="agent-sparkles" aria-hidden="true">
-            <span class="spark s1"></span>
-            <span class="spark s2"></span>
-            <span class="spark s3"></span>
-            <span class="spark s4"></span>
-          </div>
-
-          <div class="agent-tip-head">
-            <div class="agent-tip-badge">
-              <span class="agent-tip-dot"></span>
-              <span>Tips from Austin</span>
+          <!-- "Tips from Austin" 原本是一张独立卡片；和上方 for-agent 卡
+               在概念上其实是一件事（Austin 在和读者 / agent 打招呼），拆成
+               两张会让主题凝聚力变弱，这里并进来作为主卡的 signed footer。 -->
+          <div class="agent-signoff">
+            <div class="agent-sparkles" aria-hidden="true">
+              <span class="spark s1"></span>
+              <span class="spark s2"></span>
+              <span class="spark s3"></span>
+              <span class="spark s4"></span>
             </div>
-            <div class="agent-tip-heart" aria-hidden="true">
-              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="34" height="34">
-                <path d="M23.6 4c-2.3 0-4.3 1.2-5.6 3-1.3-1.8-3.3-3-5.6-3C8.9 4 6 6.9 6 10.5c0 7 10 13.5 12 13.5s12-6.5 12-13.5C30 6.9 27.1 4 23.6 4z" fill="#FF4C60"/>
-              </svg>
+            <div class="agent-signoff-head">
+              <div class="agent-signoff-badge">
+                <span class="agent-signoff-dot"></span>
+                <span>P.S. from Austin</span>
+              </div>
+              <div class="agent-signoff-heart" aria-hidden="true">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                  <path d="M23.6 4c-2.3 0-4.3 1.2-5.6 3-1.3-1.8-3.3-3-5.6-3C8.9 4 6 6.9 6 10.5c0 7 10 13.5 12 13.5s12-6.5 12-13.5C30 6.9 27.1 4 23.6 4z" fill="#FF4C60"/>
+                </svg>
+              </div>
             </div>
-          </div>
-
-          <div class="agent-tip-body">
-            <p class="agent-tip-text mb-0">
-              That said, you're more than welcome to wander around this little site in person —
-              it's hand-crafted the <b>&ldquo;old-school&rdquo;</b> way: no React,
-              no Next.js, just HTML / CSS / JS with a pinch of Python glue. 🍯
-            </p>
-            <p class="agent-tip-text mb-0 mt-3">
-              Hope the vibe here makes you smile — and that you have a lovely time exploring. ✨
-            </p>
+            <div class="agent-signoff-body">
+              <p class="agent-signoff-text mb-0">
+                That said, you're more than welcome to wander around in person —
+                this site is hand-crafted the <b>&ldquo;old-school&rdquo;</b> way:
+                no React, no Next.js, just HTML / CSS / JS with a pinch of Python glue. 🍯
+              </p>
+              <p class="agent-signoff-text mb-0 mt-2">
+                Hope the vibe here makes you smile — and that you have a lovely time exploring. ✨
+              </p>
+            </div>
           </div>
         </div>
       </div>
