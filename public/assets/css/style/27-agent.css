@@ -215,6 +215,43 @@ body.dark section.agent span {
   --brand-bg-dark: #0071E3;
 }
 
+/* "…" chip：表达"这个品牌列表不是穷举的"的隐喻。走中性灰调 + 虚线描边
+   暗示"开放集合"；hover 时三个点有一个水平 breathing 动画，像"还在加载更多"。 */
+.agent-brand--more {
+  --brand: #8a8ab0;
+  --brand-bg: #8a8ab0;
+  --brand-dark: #b8b8d8;
+  --brand-bg-dark: #6C6CE5;
+  /* 用虚线 border 盖住 inset box-shadow 的实线边，提示"not a real entry"。 */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 1px dashed rgba(138, 138, 176, 0.45);
+}
+.agent-brand--more:hover {
+  background: rgba(138, 138, 240, 0.10) !important;
+  border-color: rgba(138, 138, 240, 0.7);
+  box-shadow: 0 6px 14px rgba(138, 138, 240, 0.18) !important;
+}
+.agent-brand--more svg circle {
+  transform-origin: center;
+  animation: agent-more-dot 1.8s ease-in-out infinite;
+}
+.agent-brand--more svg circle:nth-child(1) { animation-delay: 0s; }
+.agent-brand--more svg circle:nth-child(2) { animation-delay: 0.2s; }
+.agent-brand--more svg circle:nth-child(3) { animation-delay: 0.4s; }
+@keyframes agent-more-dot {
+  0%, 60%, 100% { opacity: 0.55; transform: scale(1); }
+  30%           { opacity: 1;    transform: scale(1.25); }
+}
+body.dark section.agent .agent-brand--more {
+  border-color: rgba(184, 184, 216, 0.30);
+}
+body.dark section.agent .agent-brand--more:hover {
+  background: rgba(138, 138, 240, 0.16) !important;
+  border-color: rgba(184, 184, 255, 0.55);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
 @keyframes agent-float {
   /* 保留给别处用；品牌 strip 本身不再浮动 */
   0%, 100% { transform: translateY(0); }
@@ -835,7 +872,8 @@ body.dark section.agent .agent-prompt-url {
   .agent-hint i,
   .agent-tip-heart,
   .agent-tip-dot,
-  .agent-sparkles .spark {
+  .agent-sparkles .spark,
+  .agent-brand--more svg circle {
     animation: none !important;
   }
   .agent-brand,
