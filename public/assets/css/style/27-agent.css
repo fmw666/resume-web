@@ -39,18 +39,26 @@ body.dark section.agent span {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
+  /* 两端羽化 + 主色集中在品牌紫/珊瑚，不再是 "OpenAI + Anthropic + Google"
+     的多家品牌拼色。理由：
+     · 多家品牌硬切片在浅色 neumorphism 上视觉过载；
+     · 这条 ribbon 的任务只是"给卡顶加个品牌化装饰线"，不是色谱教学；
+     · 换成站点自己的渐变（coral → gold → violet）让它"属于这张卡"，
+       而非"贴着一张卡的彩虹贴纸"。 */
   background: linear-gradient(90deg,
-    #10A37F 0%,
-    #D97757 22%,
-    #4285F4 40%,
-    #9168C0 55%,
-    #E8416F 70%,
-    #F5B84A 82%,
-    #6C6CE5 100%
+    transparent 0%,
+    rgba(255, 76, 96, 0.55) 12%,
+    rgba(255, 209, 92, 0.75) 40%,
+    rgba(108, 108, 229, 0.85) 68%,
+    rgba(138, 138, 240, 0.55) 90%,
+    transparent 100%
   );
   z-index: 3;
-  opacity: 0.9;
+  opacity: 0.85;
+  /* 细微发光让它和 neumorphism 浅底融合，不再像贴纸 */
+  filter: blur(0.2px);
+  box-shadow: 0 4px 14px -6px rgba(108, 108, 229, 0.35);
 }
 
 .agent-card-head {
@@ -215,6 +223,51 @@ body.dark section.agent span {
   --brand-bg-dark: #0071E3;
 }
 
+/* .agent-tag 的 data-brand 映射：
+   只复用 4 家（desc 段落里提到的），色值直接走每家的 "可读" 色 ——
+   不是 chip 的 logo 色 (--brand)，而是更适合做文本前景的辅色。 */
+.agent-tag[data-brand="chatgpt"] { --brand: #10A37F; --brand-bg: #10A37F; }
+.agent-tag[data-brand="claude"]  { --brand: #C2613D; --brand-bg: #D97757; }
+.agent-tag[data-brand="cursor"]  { --brand: #4a4668; --brand-bg: #6C6CE5; }
+.agent-tag[data-brand="gemini"]  { --brand: #1C7EED; --brand-bg: #4285F4; }
+
+/* "…" chip：表达"这个品牌列表不是穷举的"的隐喻。走中性灰调 + 虚线描边
+   暗示"开放集合"；hover 时三个点有一个水平 breathing 动画，像"还在加载更多"。 */
+.agent-brand--more {
+  --brand: #8a8ab0;
+  --brand-bg: #8a8ab0;
+  --brand-dark: #b8b8d8;
+  --brand-bg-dark: #6C6CE5;
+  /* 用虚线 border 盖住 inset box-shadow 的实线边，提示"not a real entry"。 */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 1px dashed rgba(138, 138, 176, 0.45);
+}
+.agent-brand--more:hover {
+  background: rgba(138, 138, 240, 0.10) !important;
+  border-color: rgba(138, 138, 240, 0.7);
+  box-shadow: 0 6px 14px rgba(138, 138, 240, 0.18) !important;
+}
+.agent-brand--more svg circle {
+  transform-origin: center;
+  animation: agent-more-dot 1.8s ease-in-out infinite;
+}
+.agent-brand--more svg circle:nth-child(1) { animation-delay: 0s; }
+.agent-brand--more svg circle:nth-child(2) { animation-delay: 0.2s; }
+.agent-brand--more svg circle:nth-child(3) { animation-delay: 0.4s; }
+@keyframes agent-more-dot {
+  0%, 60%, 100% { opacity: 0.55; transform: scale(1); }
+  30%           { opacity: 1;    transform: scale(1.25); }
+}
+body.dark section.agent .agent-brand--more {
+  border-color: rgba(184, 184, 216, 0.30);
+}
+body.dark section.agent .agent-brand--more:hover {
+  background: rgba(138, 138, 240, 0.16) !important;
+  border-color: rgba(184, 184, 255, 0.55);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
 @keyframes agent-float {
   /* 保留给别处用；品牌 strip 本身不再浮动 */
   0%, 100% { transform: translateY(0); }
@@ -229,15 +282,42 @@ body.dark section.agent span {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  /* pill 现在作为 eyebrow 独占一行在 h3 上方，降低 h3 周边的竞争 */
+  margin-bottom: 6px;
 }
 .agent-card-title h3 {
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 1.15;
-  letter-spacing: -0.3px;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  /* 主标题用更大的字号 + 更紧的字距，和副标题 / 描述形成更强的字号跳级，
+     遵循 "一个层级一个角色" 的排版原则，避免全是 14-16px 的糊状平铺。 */
+}
+/* hero 标题走 "纯实心色 + zero shadow" 的平面现代方案。
+   为什么放弃渐变剪切字：
+   · `color: transparent + background-clip: text` 在浅色 neumorphism 底
+     下会把 sub-pixel antialiasing 的半透明边泄漏出来，看起来像
+     "字周一圈灰雾"；
+   · 05-sections.css 里 `section.light h3` 还给所有浅色 section 的 h3
+     套了一层 neumorphism 双向 text-shadow — 叠在透明字上就会出现
+     "凸起脏边"的伪描边（截图里的那个丑陋阴影）；
+   · 此卡内其他文字（subtitle / desc / hint / signoff）都是平的，
+     标题单独凸起反而破坏一致性。
+   特异性说明：`section.agent .agent-card-title h3.light` = (0,0,3,2)，
+   稳定压过 05-sections.css 的 `section h3.light`(0,0,1,2) /
+   `section.light h3`(0,0,2,2)。 */
+section.agent .agent-card-title h3,
+section.agent .agent-card-title h3.light {
+  color: #2e2c55;
+  -webkit-text-fill-color: #2e2c55;
+  text-shadow: none;
+  background: none;
 }
 .agent-card-wave {
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1;
   transform-origin: 70% 70%;
   display: inline-block;
@@ -264,16 +344,49 @@ body.dark section.agent span {
 }
 .agent-subtitle {
   color: #7b7ba0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  margin-top: 4px !important;
+  font-size: 15px;
+  line-height: 1.55;
+  margin-top: 6px !important;
   max-width: 62ch;
 }
 
+/* ── agent-desc ──────────────────────────────
+   从平铺段落升级为 callout 引用块：
+   · 左侧 3px 品牌渐变线 — 和顶部 ribbon、prompt 终端形成 "紫色线索" 的排版关联；
+   · 背景轻微漂移过的品牌色混合，把 desc 和 prompt 结构性地 "粘" 在一起；
+   · 字号从 15px → 16px，行高更舒服，和 subtitle 形成明确层级跳级。 */
 .agent-desc {
-  line-height: 1.8;
+  line-height: 1.75;
   color: #454360;
-  font-size: 15px;
+  font-size: 16px;
+}
+.agent-desc--callout {
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(90deg,
+    rgba(108, 108, 229, 0.07) 0%,
+    rgba(108, 108, 229, 0.03) 40%,
+    transparent 100%);
+  border-left: 3px solid;
+  border-image: linear-gradient(180deg, #6C6CE5 0%, #FF4C60 100%) 1;
+}
+
+/* ── agent-tag ──────────────────────────────
+   desc 段落里提到的 ChatGPT/Claude/... 从裸 `<b>` 升级为品牌色胶囊，
+   把 prompt 要粘去的目标可视化，也和上方 brand strip 颜色系统呼应。
+   变量由 data-brand 在 .agent-brand 的规则里声明过了，这里直接复用。 */
+.agent-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92em;
+  letter-spacing: 0.01em;
+  color: var(--brand, #6C6CE5);
+  background: color-mix(in srgb, var(--brand-bg, #6C6CE5) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand, #6C6CE5) 22%, transparent);
+  white-space: nowrap;
 }
 .agent-link {
   text-decoration: none;
@@ -294,74 +407,108 @@ body.dark section.agent span {
   word-break: keep-all;
 }
 
-/* ── prompt preview card (terminal-like) ───────── */
+/* ── prompt preview card ─────────────────────────
+   浅色主题：和主卡底 `#e0e5ec` 同一条灰调色轴上的"亮一档"变体
+   (`#e9edf3` → `#e0e5ec`)，而不是另起一个白。
+   head 和 body 共用同一块底面，只靠 1px 分割线分区，不再用
+   不同色块拼接（那会让卡里出现可见的"色差边"）。
+   外框一圈 1px 内描边让卡的边界清晰，同时和 `.agent-brands` 的
+   "浅渐变 + inset hairline" 处理语言对齐。
+   暗色主题保留"深空玻璃"特例，见下方 body.dark 块。 */
 .agent-prompt {
   margin-top: 8px;
   border-radius: 14px;
-  background: #1d1b3a;
+  /* 纯色底（不是 linear-gradient）—— 关键决定：
+     · 全局 `* { transition: all 0.3s !important }` 让主题切换平滑过渡，
+       但 linear-gradient 背景 不支持 transition，会瞬间跳变，和主卡
+       `.bg-surface` (单色 background-color) 的平滑过渡步调错开，
+       看起来 prompt "先跳 / 后到"；
+     · 用单色 + 内描边 + 顶部 1px 高光，切换颜色时 prompt 和主卡
+       严格同步，视觉上整张卡一起呼吸；
+     · 颜色比主卡底 (#e0e5ec) 亮一档到 #e8ecf3，提供卡中卡的层级感，
+       但仍在同一条灰调色轴上，不像白板。 */
+  background-color: #e8ecf3;
   box-shadow:
-    0 10px 30px rgba(29, 27, 58, 0.22),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    inset 0 0 0 1px rgba(108, 108, 229, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   overflow: hidden;
   position: relative;
   cursor: copy;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .agent-prompt:hover {
-  transform: translateY(-2px);
   box-shadow:
-    0 14px 34px rgba(29, 27, 58, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    inset 0 0 0 1px rgba(108, 108, 229, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* 顶部 hairline：暗色"深空玻璃"下做 top-reflection 用（见 body.dark 块）；
+   浅色主题下不需要 —— 浅平面卡的 "0 1px 0 #fff .6" 高光已经给到同等语义，
+   再叠一条紫色 gossamer 就是多余装饰。 */
+.agent-prompt::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .agent-prompt-head {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
-  /* 同上：切主题时原先 linear-gradient 不参与全局 0.3s 过渡，改纯色。 */
-  background: #272552;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  flex-wrap: wrap;
+  padding: 11px 16px;
+  /* head 和 body 共用 .agent-prompt 的底色，只用 1px 分割线分区。
+     分割线色调和外框描边同系（低饱和紫），不再是冷灰，避免"两种灰"
+     在同一块卡里打架。 */
+  background: transparent;
+  border-bottom: 1px solid rgba(108, 108, 229, 0.14);
 }
 .agent-prompt-dots {
   display: inline-flex;
   gap: 6px;
+  flex: 0 0 auto;
 }
 .agent-prompt-dots span {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: #3a3960;
+  background: #c8ccd6;
   display: inline-block;
+  /* 浅主题下 traffic light 点描边一圈深色，提升在浅底的辨识度。 */
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(163, 177, 198, 0.4);
 }
 .agent-prompt-dots span:nth-child(1) { background: #FF4C60; }
 .agent-prompt-dots span:nth-child(2) { background: #FFD15C; }
 .agent-prompt-dots span:nth-child(3) { background: #44D7B6; }
 
 .agent-prompt-label {
-  color: #b6b5d8;
-  font-size: 12px;
-  letter-spacing: 1px;
+  color: #6b6b8c;
+  font-size: 11.5px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
   font-weight: 600;
   flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .agent-prompt-label i {
-  color: #8a8af0;
-  margin-right: 2px;
+  color: #6C6CE5;
+  font-size: 12px;
 }
 
 .agent-prompt-body {
-  /* Neutralize the global `pre` defaults (bg #e0e5ec + 1px border + radius)
-     which would otherwise leak a light rectangle inside this dark terminal card
-     and clash with the light text color. */
+  /* 抹掉全局 `pre` 默认 (bg #e0e5ec + border + radius)，避免二次嵌套浅灰。 */
   margin: 0;
-  padding: 18px 20px;
+  padding: 20px 22px 22px 46px;
   font-family: "Rubik", "SF Mono", Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.75;
-  color: #e7e6ff;
+  color: #2e2c55;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -369,6 +516,18 @@ body.dark section.agent span {
   word-break: break-word;
   overflow-wrap: anywhere;
   overflow-x: hidden;
+  position: relative;
+}
+/* 提示符 `❯`：浅主题下用品牌紫，带细微发光呼应上方紫线。 */
+.agent-prompt-body::before {
+  content: "❯";
+  position: absolute;
+  left: 22px;
+  top: 19px;
+  color: #6C6CE5;
+  font-weight: 700;
+  font-size: 15px;
+  text-shadow: 0 0 10px rgba(108, 108, 229, 0.35);
 }
 .agent-prompt-body code {
   color: inherit;
@@ -376,33 +535,67 @@ body.dark section.agent span {
   background: transparent;
   padding: 0;
 }
+
+/* Typewriter caret：只在 `.is-typing` 阶段显示，尾随文本末尾。
+   用 ::after 避免插入 DOM 节点污染复制内容；打完 (`.is-typed`) 立刻隐藏，
+   不和 terminal 本身的"静止成品"视觉冲突。 */
+.agent-prompt-body {
+  position: relative;
+}
+[data-typewriter].is-typing .agent-prompt-body code::after {
+  content: "▍";
+  display: inline-block;
+  margin-left: 2px;
+  color: #6C6CE5;
+  animation: agent-caret-blink 0.9s steps(2) infinite;
+}
+@keyframes agent-caret-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
 .agent-prompt-url {
-  color: #8a8af0;
-  text-decoration: underline;
-  text-decoration-color: rgba(138, 138, 240, 0.35);
-  text-underline-offset: 3px;
+  color: #6C6CE5;
+  /* 渐变下划线延续整站"紫 → 珊瑚"CTA 配色，浅底上辨识度比 underline 更高。 */
+  text-decoration: none;
+  background-image: linear-gradient(90deg, rgba(108, 108, 229, 0.9), rgba(255, 76, 96, 0.75));
+  background-repeat: no-repeat;
+  background-size: 100% 1.5px;
+  background-position: 0 100%;
+  padding-bottom: 2px;
+  transition: background-size 0.25s ease, color 0.25s ease;
+}
+.agent-prompt:hover .agent-prompt-url {
+  color: #4a4ab8;
+  background-size: 100% 2px;
 }
 
-/* copy button lives in the prompt header */
+/* copy button 在两套主题下都保持 "紫 → 珊瑚" hover 转换：不依赖主题底色，
+   始终是站点主 CTA 的色语。 */
 .agent-copy-btn {
   position: relative;
   border: 0;
   outline: none;
   cursor: pointer;
-  padding: 7px 16px;
+  padding: 7px 18px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   color: #fff;
-  background: linear-gradient(135deg, #FF4C60 0%, #ff6a85 100%);
-  box-shadow: 0 6px 16px rgba(255, 76, 96, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
-  min-width: 96px;
+  background: linear-gradient(135deg, #6C6CE5 0%, #8a8af0 100%);
+  box-shadow:
+    0 6px 16px rgba(108, 108, 229, 0.38),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.3s ease;
+  min-width: 98px;
+  flex: 0 0 auto;
 }
 .agent-copy-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(255, 76, 96, 0.4);
+  background: linear-gradient(135deg, #FF4C60 0%, #ff6a85 100%);
+  box-shadow:
+    0 10px 22px rgba(255, 76, 96, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 .agent-copy-btn:active {
   transform: translateY(0);
@@ -423,6 +616,14 @@ body.dark section.agent span {
 .agent-copy-btn.is-copied {
   background: linear-gradient(135deg, #44D7B6 0%, #6ce5c8 100%);
   box-shadow: 0 6px 16px rgba(68, 215, 182, 0.4);
+}
+/* 成功态下即便鼠标悬停也不回退到紫/粉：confirm 状态是"完成反馈"，
+   比 hover affordance 优先级高，避免视觉上出现"刚 copied 就又变粉"的闪烁。 */
+.agent-copy-btn.is-copied:hover {
+  background: linear-gradient(135deg, #44D7B6 0%, #6ce5c8 100%);
+  box-shadow:
+    0 8px 20px rgba(68, 215, 182, 0.48),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 .agent-copy-btn.is-copied .agent-copy-label {
   opacity: 0;
@@ -455,6 +656,90 @@ body.dark section.agent span {
 @keyframes agent-wand {
   0%, 100% { transform: rotate(-8deg); }
   50%      { transform: rotate(14deg); }
+}
+
+/* ═══════════════════════════════════════════════════
+   signoff — 主卡内的 "P.S." 段落
+   ───────────────────────────────────────────────────
+   原本是一张独立的 `.agent-tip` 卡（下方全宽）。之所以合并进来：
+   · 概念上：tips 卡和 for-agent 卡都是 Austin 的自述，分成两张卡会
+     稀释 section 的焦点 (prompt + copy)；
+   · 视觉上：两张并排的 neumorphism 卡在移动端会堆成两截，层级扁平；
+   · 语义上：这里是 "在正式指令之后，给人看的脚注"，和签名、后记一脉。
+
+   .agent-tip 的 class 仍保留在 CSS 中以向后兼容，HTML 不再使用。 */
+.agent-signoff {
+  position: relative;
+  margin-top: 26px;
+  padding: 18px 20px 16px;
+  border-radius: 14px;
+  /* 非常轻的分隔：顶部一条 hairline 而不是完整的卡片边框，
+     让它"附着"在主卡内部，而不是再起一张独立的 pane。 */
+  border-top: 1px dashed rgba(108, 108, 229, 0.22);
+  background:
+    radial-gradient(420px 120px at 90% 0%, rgba(255, 76, 96, 0.05), transparent 60%),
+    radial-gradient(380px 120px at 0% 100%, rgba(108, 108, 229, 0.05), transparent 60%);
+  overflow: hidden;
+}
+.agent-signoff-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 8px;
+}
+.agent-signoff-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #6C6CE5;
+  background: rgba(108, 108, 229, 0.10);
+  padding: 5px 12px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.18);
+}
+.agent-signoff-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF4C60;
+  box-shadow: 0 0 0 3px rgba(255, 76, 96, 0.22);
+  /* 复用 pulse，不另建关键帧 */
+  animation: agent-pulse 1.8s ease-in-out infinite;
+}
+.agent-signoff-heart {
+  display: inline-flex;
+  animation: agent-heart 1.6s ease-in-out infinite;
+}
+.agent-signoff-body {
+  position: relative;
+  z-index: 2;
+}
+.agent-signoff-text {
+  color: #6b6b8c;
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+body.dark section.agent .agent-signoff {
+  border-top-color: rgba(138, 138, 240, 0.22);
+  background:
+    radial-gradient(420px 120px at 90% 0%, rgba(255, 106, 133, 0.06), transparent 60%),
+    radial-gradient(380px 120px at 0% 100%, rgba(138, 138, 240, 0.08), transparent 60%);
+}
+body.dark section.agent .agent-signoff-badge {
+  color: #b8b8ff;
+  background: rgba(138, 138, 240, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(138, 138, 240, 0.28);
+}
+body.dark section.agent .agent-signoff-text {
+  color: #cdcbe3;
 }
 
 /* ── tip card ──────────────────────────────────── */
@@ -604,14 +889,81 @@ body.dark section.agent .agent-code {
   background: rgba(138, 138, 240, 0.18);
   color: #b8b8ff;
 }
+/* ═══════════════════════════════════════════════════
+   暗色主题 prompt 卡：深空玻璃风格
+   ───────────────────────────────────────────────────
+   浅色主题走 "浅色 neumorphism 凹槽"（见 .agent-prompt 默认规则），
+   暗色主题彻底换一套 vocabulary：对角深紫渐变 + 低饱和径向光晕 +
+   hairline 描边，呼应暗色下 body 背景的 "deep space" 基调。
+   必须把浅色的 inset 凹槽 shadow 完全 reset 掉，否则会"两套 shadow 叠加"。 */
+/* 暗色主题：纯色 background-color 作为"主题过渡骨架"，
+   光晕 / 玻璃纹理走 ::after overlay 层。
+   原因：全局 `* { transition: all 0.3s }` 让 background-color 单色
+   插值过渡丝滑，但 gradient 不支持 transition，切主题时 prompt 会
+   "跳变" 和主卡不同步。拆开后 background-color 和主卡 #353353 同频
+   地 hop 到 #0e0d1f，装饰层独立不影响过渡。 */
 body.dark section.agent .agent-prompt {
-  background: #16152c;
+  background: none;
+  background-color: #0e0d1f;
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 16px 38px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+body.dark section.agent .agent-prompt::after {
+  /* 深空玻璃的双光晕层：紫光左上、珊瑚光右下。
+     pointer-events:none 防止挡 click；z-index:0 压在 head / body 内容下。 */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(600px 220px at 12% -30%, rgba(108, 108, 229, 0.28), transparent 60%),
+    radial-gradient(520px 200px at 108% 130%, rgba(255, 76, 96, 0.12), transparent 60%),
+    linear-gradient(135deg, rgba(22, 21, 44, 0) 0%, rgba(14, 13, 31, 0) 55%, rgba(8, 7, 26, 0.5) 100%);
+  border-radius: inherit;
+}
+/* head / body 抬到 overlay 之上 */
+body.dark section.agent .agent-prompt-head,
+body.dark section.agent .agent-prompt-body {
+  position: relative;
+  z-index: 1;
+}
+body.dark section.agent .agent-prompt:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.62),
+    0 4px 10px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(138, 138, 240, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+body.dark section.agent .agent-prompt::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(138, 138, 240, 0) 10%,
+    rgba(138, 138, 240, 0.55) 50%,
+    rgba(138, 138, 240, 0) 90%,
+    transparent 100%
+  );
+  opacity: 1;
 }
 body.dark section.agent .agent-prompt-head {
-  background: #20203f;
+  background: rgba(8, 7, 26, 0.55);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+body.dark section.agent .agent-prompt-dots span {
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+}
+body.dark section.agent .agent-prompt-body {
+  color: #e7e6ff;
+}
+body.dark section.agent .agent-prompt-body::before {
+  color: #8a8af0;
+  text-shadow: 0 0 12px rgba(138, 138, 240, 0.45);
 }
 body.dark section.agent .agent-hint {
   color: #cdcbe3;
@@ -625,14 +977,21 @@ body.dark section.agent .agent-tip-badge {
 body.dark section.agent .agent-card-title h3,
 body.dark section.agent .agent-card-title h3.light {
   color: #fff;
+  -webkit-text-fill-color: #fff;
   text-shadow: none;
 }
 body.dark section.agent .agent-prompt-label {
-  color: #b6b5d8;
+  color: #c8c7ec;
+}
+body.dark section.agent .agent-prompt-label i {
+  color: #8a8af0;
 }
 body.dark section.agent .agent-prompt-url {
   color: #a5a5ff;
-  text-decoration-color: rgba(165, 165, 255, 0.4);
+  background-image: linear-gradient(90deg, rgba(138, 138, 240, 0.8), rgba(255, 106, 133, 0.6));
+}
+body.dark section.agent .agent-prompt:hover .agent-prompt-url {
+  color: #c6c6ff;
 }
 
 /* ── tablet (landscape phones & narrow tablets) ── */
@@ -669,10 +1028,11 @@ body.dark section.agent .agent-prompt-url {
     border-radius: 10px;
   }
   .agent-card-title h3 {
-    font-size: 22px;
+    font-size: 26px;
+    gap: 8px;
   }
   .agent-card-wave {
-    font-size: 22px;
+    font-size: 24px;
   }
   .agent-card-pill {
     font-size: 10px;
@@ -682,7 +1042,7 @@ body.dark section.agent .agent-prompt-url {
     font-size: 13.5px;
   }
   .agent-desc {
-    font-size: 14.5px;
+    font-size: 15px;
   }
   .agent-prompt-head {
     gap: 8px;
@@ -699,9 +1059,15 @@ body.dark section.agent .agent-prompt-url {
     padding: 9px 16px;
   }
   .agent-prompt-body {
-    padding: 14px 16px;
+    /* 左内边距保留 36px 给 ❯ 提示符空间（桌面 46px），窄屏往里收。 */
+    padding: 14px 16px 16px 36px;
     font-size: 13px;
     line-height: 1.7;
+  }
+  .agent-prompt-body::before {
+    left: 14px;
+    top: 13px;
+    font-size: 14px;
   }
   .agent-hint {
     font-size: 13px;
@@ -711,6 +1077,21 @@ body.dark section.agent .agent-prompt-url {
   .agent-hint i {
     font-size: 16px;
     margin-top: 2px;
+  }
+  .agent-signoff {
+    padding: 14px 16px 12px;
+    margin-top: 20px;
+  }
+  .agent-signoff-head {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .agent-signoff-text {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .agent-desc--callout {
+    padding: 12px 14px;
   }
   .agent-tip-head {
     flex-wrap: wrap;
@@ -729,7 +1110,12 @@ body.dark section.agent .agent-prompt-url {
 @media (max-width: 360px) {
   .agent-prompt-body {
     font-size: 12.5px;
-    padding: 12px 14px;
+    padding: 12px 14px 14px 32px;
+  }
+  .agent-prompt-body::before {
+    left: 12px;
+    top: 11px;
+    font-size: 13px;
   }
   .agent-card,
   .agent-tip {
@@ -746,7 +1132,11 @@ body.dark section.agent .agent-prompt-url {
   .agent-hint i,
   .agent-tip-heart,
   .agent-tip-dot,
-  .agent-sparkles .spark {
+  .agent-signoff-heart,
+  .agent-signoff-dot,
+  .agent-sparkles .spark,
+  .agent-brand--more svg circle,
+  [data-typewriter].is-typing .agent-prompt-body code::after {
     animation: none !important;
   }
   .agent-brand,
@@ -782,6 +1172,10 @@ body.dark section.agent .agent-prompt-url {
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.18),
       0 6px 14px rgba(0, 0, 0, 0.45);
+  }
+  .agent-tag {
+    background: rgba(108, 108, 229, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.22);
   }
 }
 

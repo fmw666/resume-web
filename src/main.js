@@ -35,7 +35,7 @@ import {
 } from './modules/animations.js';
 import { applyDataAttrs } from './modules/dom-utils.js';
 import { initSelfIntroAudio } from './modules/self-intro.js';
-import { initAgentCopy } from './modules/agent.js';
+import { initAgentCopy, initAgentTypewriter } from './modules/agent.js';
 import { initPortfolioLazy } from './modules/portfolio.js';
 import { initTestimonialsLazy } from './modules/testimonials.js';
 import { initContactForm } from './modules/contact.js';
@@ -66,6 +66,7 @@ function buildPipeline() {
   pipe.register(PHASES.POST_MOUNT, 'nav:return-top', initReturnToTop);
   pipe.register(PHASES.POST_MOUNT, 'self-intro', initSelfIntroAudio);
   pipe.register(PHASES.POST_MOUNT, 'agent', initAgentCopy);
+  pipe.register(PHASES.POST_MOUNT, 'agent:typewriter', initAgentTypewriter);
 
   // ENHANCE：核心 vendor 就绪后再绑定依赖它们的能力。
   pipe.register(PHASES.ENHANCE, 'vendors:core+scrollspy+smooth+animations', async () => {
