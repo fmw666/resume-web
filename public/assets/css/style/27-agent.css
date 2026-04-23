@@ -294,70 +294,103 @@ body.dark section.agent span {
   word-break: keep-all;
 }
 
-/* ── prompt preview card (terminal-like) ───────── */
+/* ── prompt preview card (terminal-like) ─────────
+   深空玻璃感：对角渐变 + 两团低饱和光晕 + hairline 描边，和主卡的暖色
+   radial 光斑互补；整张卡可点击复制，hover 时轻微抬起 + 投影加厚。 */
 .agent-prompt {
   margin-top: 8px;
-  border-radius: 14px;
-  background: #1d1b3a;
+  border-radius: 16px;
+  /* 对角渐变模拟"深空"；单色 #1d1b3a 在 light card 上显得过于死黑。 */
+  background:
+    radial-gradient(600px 220px at 12% -30%, rgba(108, 108, 229, 0.45), transparent 60%),
+    radial-gradient(520px 200px at 108% 130%, rgba(255, 76, 96, 0.22), transparent 60%),
+    linear-gradient(135deg, #1c1b3a 0%, #14132a 55%, #0f0e22 100%);
   box-shadow:
-    0 10px 30px rgba(29, 27, 58, 0.22),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    0 14px 34px rgba(10, 9, 30, 0.38),
+    0 2px 6px rgba(10, 9, 30, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04); /* top hairline 模拟玻璃高光 */
   overflow: hidden;
   position: relative;
   cursor: copy;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .agent-prompt:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow:
-    0 14px 34px rgba(29, 27, 58, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 20px 44px rgba(10, 9, 30, 0.46),
+    0 4px 10px rgba(10, 9, 30, 0.34),
+    inset 0 0 0 1px rgba(138, 138, 240, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 顶部状态呼吸条：给终端卡增加一条动态的 ambient 光，隐喻"模型在 listen"。
+   走一个横向流光，非常低调，只在 pointer-fine 设备显示。 */
+.agent-prompt::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(138, 138, 240, 0) 10%,
+    rgba(138, 138, 240, 0.55) 50%,
+    rgba(138, 138, 240, 0) 90%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .agent-prompt-head {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
-  /* 同上：切主题时原先 linear-gradient 不参与全局 0.3s 过渡，改纯色。 */
-  background: #272552;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  flex-wrap: wrap;
+  padding: 11px 16px;
+  /* 半透明底 + 细分割线：比原来的实心 #272552 通透很多，
+     渐变会"穿过"头部和 body，视觉上是一块连续的玻璃，而不是两块拼接的板。 */
+  background: rgba(20, 19, 42, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 .agent-prompt-dots {
   display: inline-flex;
   gap: 6px;
+  flex: 0 0 auto;
 }
 .agent-prompt-dots span {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: #3a3960;
   display: inline-block;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.3);
 }
 .agent-prompt-dots span:nth-child(1) { background: #FF4C60; }
 .agent-prompt-dots span:nth-child(2) { background: #FFD15C; }
 .agent-prompt-dots span:nth-child(3) { background: #44D7B6; }
 
 .agent-prompt-label {
-  color: #b6b5d8;
-  font-size: 12px;
-  letter-spacing: 1px;
+  color: #c8c7ec;
+  font-size: 11.5px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
   font-weight: 600;
   flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .agent-prompt-label i {
   color: #8a8af0;
-  margin-right: 2px;
+  font-size: 12px;
 }
 
 .agent-prompt-body {
-  /* Neutralize the global `pre` defaults (bg #e0e5ec + 1px border + radius)
-     which would otherwise leak a light rectangle inside this dark terminal card
-     and clash with the light text color. */
+  /* 抹掉全局 `pre` 默认：浅灰底 + 边框 + 圆角 会在这块深卡里露出一圈浅矩形。 */
   margin: 0;
-  padding: 18px 20px;
+  padding: 20px 22px 22px 46px;
   font-family: "Rubik", "SF Mono", Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.75;
@@ -369,6 +402,18 @@ body.dark section.agent span {
   word-break: break-word;
   overflow-wrap: anywhere;
   overflow-x: hidden;
+  position: relative;
+}
+/* 提示符 `❯`：代替纯白前缀，暗示"这是一条等待执行的 prompt"，用紫青双色提亮。 */
+.agent-prompt-body::before {
+  content: "❯";
+  position: absolute;
+  left: 22px;
+  top: 19px;
+  color: #8a8af0;
+  font-weight: 700;
+  font-size: 15px;
+  text-shadow: 0 0 12px rgba(138, 138, 240, 0.45);
 }
 .agent-prompt-body code {
   color: inherit;
@@ -377,10 +422,19 @@ body.dark section.agent span {
   padding: 0;
 }
 .agent-prompt-url {
-  color: #8a8af0;
-  text-decoration: underline;
-  text-decoration-color: rgba(138, 138, 240, 0.35);
-  text-underline-offset: 3px;
+  color: #a5a5ff;
+  /* 渐变下划线：text-decoration 无法渐变，改用 bottom 方向的 linear-gradient 伪下划线。 */
+  text-decoration: none;
+  background-image: linear-gradient(90deg, rgba(138, 138, 240, 0.8), rgba(255, 106, 133, 0.6));
+  background-repeat: no-repeat;
+  background-size: 100% 1.5px;
+  background-position: 0 100%;
+  padding-bottom: 2px;
+  transition: background-size 0.25s ease, color 0.25s ease;
+}
+.agent-prompt:hover .agent-prompt-url {
+  color: #c6c6ff;
+  background-size: 100% 2px;
 }
 
 /* copy button lives in the prompt header */
@@ -389,20 +443,28 @@ body.dark section.agent span {
   border: 0;
   outline: none;
   cursor: pointer;
-  padding: 7px 16px;
+  padding: 7px 18px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   color: #fff;
-  background: linear-gradient(135deg, #FF4C60 0%, #ff6a85 100%);
-  box-shadow: 0 6px 16px rgba(255, 76, 96, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
-  min-width: 96px;
+  /* 和终端的冷紫调呼应：默认态用紫 → 蓝紫渐变；hover 过渡到暖粉，
+     形成"从沉静到召唤"的互动反馈，比原来一上来就粉更克制。 */
+  background: linear-gradient(135deg, #6C6CE5 0%, #8a8af0 100%);
+  box-shadow:
+    0 6px 16px rgba(108, 108, 229, 0.38),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.3s ease;
+  min-width: 98px;
+  flex: 0 0 auto;
 }
 .agent-copy-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(255, 76, 96, 0.4);
+  background: linear-gradient(135deg, #FF4C60 0%, #ff6a85 100%);
+  box-shadow:
+    0 10px 22px rgba(255, 76, 96, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 .agent-copy-btn:active {
   transform: translateY(0);
@@ -423,6 +485,14 @@ body.dark section.agent span {
 .agent-copy-btn.is-copied {
   background: linear-gradient(135deg, #44D7B6 0%, #6ce5c8 100%);
   box-shadow: 0 6px 16px rgba(68, 215, 182, 0.4);
+}
+/* 成功态下即便鼠标悬停也不回退到紫/粉：confirm 状态是"完成反馈"，
+   比 hover affordance 优先级高，避免视觉上出现"刚 copied 就又变粉"的闪烁。 */
+.agent-copy-btn.is-copied:hover {
+  background: linear-gradient(135deg, #44D7B6 0%, #6ce5c8 100%);
+  box-shadow:
+    0 8px 20px rgba(68, 215, 182, 0.48),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 .agent-copy-btn.is-copied .agent-copy-label {
   opacity: 0;
@@ -605,13 +675,21 @@ body.dark section.agent .agent-code {
   color: #b8b8ff;
 }
 body.dark section.agent .agent-prompt {
-  background: #16152c;
+  /* 暗色主题下：把 radial 光晕压深一点，让终端卡比整张 agent-card
+     的深紫底"更深一层"，形成 nested 的纵深感。 */
+  background:
+    radial-gradient(600px 220px at 12% -30%, rgba(108, 108, 229, 0.28), transparent 60%),
+    radial-gradient(520px 200px at 108% 130%, rgba(255, 76, 96, 0.12), transparent 60%),
+    linear-gradient(135deg, #16152c 0%, #0e0d1f 55%, #08071a 100%);
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 16px 38px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 body.dark section.agent .agent-prompt-head {
-  background: #20203f;
+  background: rgba(8, 7, 26, 0.55);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 body.dark section.agent .agent-hint {
   color: #cdcbe3;
@@ -699,9 +777,15 @@ body.dark section.agent .agent-prompt-url {
     padding: 9px 16px;
   }
   .agent-prompt-body {
-    padding: 14px 16px;
+    /* 左内边距保留 36px 给 ❯ 提示符空间（桌面 46px），窄屏往里收。 */
+    padding: 14px 16px 16px 36px;
     font-size: 13px;
     line-height: 1.7;
+  }
+  .agent-prompt-body::before {
+    left: 14px;
+    top: 13px;
+    font-size: 14px;
   }
   .agent-hint {
     font-size: 13px;
@@ -729,7 +813,12 @@ body.dark section.agent .agent-prompt-url {
 @media (max-width: 360px) {
   .agent-prompt-body {
     font-size: 12.5px;
-    padding: 12px 14px;
+    padding: 12px 14px 14px 32px;
+  }
+  .agent-prompt-body::before {
+    left: 12px;
+    top: 11px;
+    font-size: 13px;
   }
   .agent-card,
   .agent-tip {
