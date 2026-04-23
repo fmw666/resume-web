@@ -62,17 +62,29 @@ body.dark section.agent span {
 }
 
 .agent-card-head {
+  /* 副标题已移除，卡头只剩 "Hi, Agent! 👋" + 品牌墙两个独立块，
+     两者都是自然宽度内容 → 用 flex + space-between 比 grid 更直接：
+     标题贴左、品牌墙贴右、中间自动拉开。flex-wrap 保证窄屏能优雅换行。
+     DOM 顺序是 brand strip 在前、title 在后，用 order 反转视觉：title 左、brands 右。 */
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 24px;
+  row-gap: 14px;
+}
+.agent-card-title {
+  order: 1;
+  min-width: 0;
 }
 .agent-card-head-top {
-  margin-bottom: 4px;
+  order: 2;
+  margin: 0;
 }
 
-/* ── brand strip：横向一行 9 chips + 引导语 ─────
-   取代原来的 3x3 方块 avatar，整条横贯卡头，右边不再大片空白。
-   label 在左，chips 均匀展开，弹性靠 flex-wrap 自动换行。 */
+/* ── brand strip：紧凑的品牌墙 ─────────────────────
+   放在 .agent-card-head 右栏，内容自然宽度。flex-wrap 保留是为了
+   极端窄屏（但大于 @media 767px 断点）时 chips 能自动换行成多行。 */
 .agent-brands {
   display: flex;
   flex-wrap: wrap;
@@ -83,16 +95,6 @@ body.dark section.agent span {
   background:
     linear-gradient(135deg, rgba(108, 108, 229, 0.06), rgba(255, 76, 96, 0.04) 60%, rgba(68, 215, 182, 0.05));
   box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.10);
-}
-.agent-brands-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: #7b7ba0;
-  padding-right: 4px;
-  /* 单独占一行的 label，配合后面的一行 chips 视觉上像 "Section Title + Items"。 */
-  margin-right: auto;
 }
 .agent-brand {
   /* ── 品牌配色的 4 槽系统 ────────────────────────────────
@@ -275,16 +277,12 @@ body.dark section.agent .agent-brand--more:hover {
 }
 
 /* ── 标题排版 ───────────────────────────────────
-   标题、小表情、状态胶囊横排一行，比原来 "h3 + 副标题左对齐" 更现代；
-   h3 变大变粗，副标题降到 13px 灰色长句，层级清晰。 */
-.agent-card-title-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  /* pill 现在作为 eyebrow 独占一行在 h3 上方，降低 h3 周边的竞争 */
-  margin-bottom: 6px;
-}
+   h3 + 副标题纵向左对齐：原来这里还有一条 `.agent-card-title-row`
+   放 `For AI / Agents` eyebrow pill，但和新版"品牌墙下移到副标题之后"
+   的布局一起看，pill 的语义（"这是给 agent 看的区块"）已经被下方那条
+   横向 brand strip（含 "For agents on" 引导语 + 9 个品牌 chip）完全承担，
+   保留 pill 就是两次宣告同一件事 → 冗余移除。h3 变大变粗，副标题降到
+   13px 灰色长句，层级清晰。 */
 .agent-card-title h3 {
   font-weight: 800;
   font-size: 32px;
@@ -328,26 +326,6 @@ section.agent .agent-card-title h3.light {
   15%           { transform: rotate(16deg); }
   30%           { transform: rotate(-10deg); }
   45%           { transform: rotate(12deg); }
-}
-.agent-card-pill {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #6C6CE5;
-  background: rgba(108, 108, 229, 0.12);
-  padding: 5px 12px;
-  border-radius: 999px;
-  box-shadow: inset 0 0 0 1px rgba(108, 108, 229, 0.22);
-}
-.agent-subtitle {
-  color: #7b7ba0;
-  font-size: 15px;
-  line-height: 1.55;
-  margin-top: 6px !important;
-  max-width: 62ch;
 }
 
 /* ── agent-desc ──────────────────────────────
@@ -847,14 +825,6 @@ body.dark section.agent .agent-brands {
     linear-gradient(135deg, rgba(138, 138, 240, 0.10), rgba(255, 106, 133, 0.06) 60%, rgba(68, 215, 182, 0.08));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
-body.dark section.agent .agent-brands-label {
-  color: #a7a7c4;
-}
-body.dark section.agent .agent-card-pill {
-  color: #b8b8ff;
-  background: rgba(138, 138, 240, 0.18);
-  box-shadow: inset 0 0 0 1px rgba(138, 138, 240, 0.28);
-}
 body.dark section.agent .agent-card-ribbon {
   opacity: 1;
 }
@@ -875,9 +845,6 @@ body.dark section.agent .agent-brand:hover {
 body.dark section.agent .agent-desc,
 body.dark section.agent .agent-tip-text {
   color: #d7d6ea;
-}
-body.dark section.agent .agent-subtitle {
-  color: #a7a7c4;
 }
 body.dark section.agent .agent-link {
   border-bottom-color: rgba(184, 184, 255, 0.4);
@@ -1010,17 +977,17 @@ body.dark section.agent .agent-prompt:hover .agent-prompt-url {
     padding: 24px 20px !important;
   }
   .agent-card-head {
-    gap: 14px;
+    /* 窄屏回到纵向堆叠：flex-direction: column，order:1/2 让 title 在上、
+       brand strip 在下。align-items:flex-start 让 brand strip 靠左，而不是
+       被 space-between 拉成整行宽度。 */
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 14px;
   }
   .agent-brands {
     gap: 8px;
     padding: 10px 10px;
     justify-content: flex-start;
-  }
-  .agent-brands-label {
-    /* 窄屏下独占一行，避免和 chips 挤在一起 */
-    flex: 1 0 100%;
-    margin-right: 0;
   }
   .agent-brand {
     width: 40px;
@@ -1033,13 +1000,6 @@ body.dark section.agent .agent-prompt:hover .agent-prompt-url {
   }
   .agent-card-wave {
     font-size: 24px;
-  }
-  .agent-card-pill {
-    font-size: 10px;
-    padding: 4px 10px;
-  }
-  .agent-subtitle {
-    font-size: 13.5px;
   }
   .agent-desc {
     font-size: 15px;

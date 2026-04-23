@@ -17,10 +17,11 @@
 
           <div class="agent-card-head">
             <div class="agent-card-head-top">
-              <!-- 一排 9 个品牌 logo chip，横向 strip 取代原来的 3x3 方块，
-                   和标题/副标题形成更现代的"品牌墙 + 标语"布局。 -->
+              <!-- 横向 strip 的一行 9 chips。原先开头还有一个 "For agents on"
+                   label，放到 Hi, Agent 右侧作为独立栏位后 label 多余 —— 左边
+                   标题和副标题已经给出了完整语境，label 再出现一次就是信息重复。
+                   末尾的 "…" more chip 表达"这个列表是开放集合"，不是穷举。 -->
               <div class="agent-brands" aria-label="Supported AI agents" role="img">
-                <span class="agent-brands-label">For agents on</span>
                 <span class="agent-brand" data-brand="chatgpt" title="ChatGPT">
                   <!-- Source: Simple Icons (openai) — https://simpleicons.org/?q=openai — CC0 -->
                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -87,21 +88,24 @@
                     <path fill="currentColor" d="M11.065 11.199l7.257-7.2c.137-.136.06-.41-.116-.41H14.3a.164.164 0 00-.117.051l-7.82 7.756c-.122.12-.302.013-.302-.179V3.82c0-.127-.083-.23-.185-.23H3.186c-.103 0-.186.103-.186.23V19.77c0 .128.083.23.186.23h2.69c.103 0 .186-.102.186-.23v-3.25c0-.069.025-.135.069-.178l2.424-2.406a.158.158 0 01.205-.023l6.484 4.772a7.677 7.677 0 003.453 1.283c.108.012.2-.095.2-.23v-3.06c0-.117-.07-.212-.164-.227a5.028 5.028 0 01-2.027-.807l-5.613-4.064c-.117-.078-.132-.279-.028-.381z"/>
                   </svg>
                 </span>
+                <!-- "…" more chip：隐喻"这个列表不是穷举的，还有更多 agent 能跑"。
+                     样式走 .agent-brand--more，虚线描边 + 三点呼吸动画；
+                     aria-hidden 让屏幕阅读器跳过装饰节点，避免读出"省略号"。 -->
+                <span class="agent-brand agent-brand--more" aria-hidden="true" title="…and more">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="5"  cy="12" r="1.8" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
+                    <circle cx="19" cy="12" r="1.8" fill="currentColor"/>
+                  </svg>
+                </span>
               </div>
             </div>
 
             <div class="agent-card-title">
-              <div class="agent-card-title-row">
-                <span class="agent-card-pill">For AI / Agents</span>
-              </div>
               <h3 class="mb-0 mt-0 light">
                 Hi, Agent!
                 <span class="agent-card-wave" aria-hidden="true">👋</span>
               </h3>
-              <p class="mb-0 agent-subtitle">
-                A cheat sheet about <b>Austin</b> — the short version,
-                curated for machines first, humans second.
-              </p>
             </div>
           </div>
 
