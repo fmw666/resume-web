@@ -331,38 +331,40 @@ body.dark section.agent .agent-brand--more:hover {
   word-break: keep-all;
 }
 
-/* ── prompt preview card (terminal-like) ─────────
-   深空玻璃感：对角渐变 + 两团低饱和光晕 + hairline 描边，和主卡的暖色
-   radial 光斑互补；整张卡可点击复制，hover 时轻微抬起 + 投影加厚。 */
+/* ── prompt preview card ─────────────────────────
+   主题分裂设计：
+   · 浅色主题 → 浅色 neumorphism 凹槽：和 `.bg-surface` 卡底 (#e0e5ec)
+     同色系但更亮一档 (#eef1f7) + 内凹阴影，视觉上"刻进"主卡，
+     和同一张卡里的其他浅色元素（hint, tip badge）协调一致，不再"黑框突兀"。
+   · 暗色主题 → 深空玻璃（见文件下方 body.dark 块）。
+   两种主题各用各的 vocabulary，不再强行把"黑色终端"的比喻跨主题套用。 */
 .agent-prompt {
   margin-top: 8px;
   border-radius: 16px;
-  /* 对角渐变模拟"深空"；单色 #1d1b3a 在 light card 上显得过于死黑。 */
   background:
-    radial-gradient(600px 220px at 12% -30%, rgba(108, 108, 229, 0.45), transparent 60%),
-    radial-gradient(520px 200px at 108% 130%, rgba(255, 76, 96, 0.22), transparent 60%),
-    linear-gradient(135deg, #1c1b3a 0%, #14132a 55%, #0f0e22 100%);
+    /* 极淡的斜向高光，让浅底不"平"；亮度差 < 3%，只在侧视时察觉 */
+    linear-gradient(135deg, #f3f5fb 0%, #e8ecf4 100%);
+  /* Neumorphism 凹槽：内阴影"深陷 + 浅亮"双向，和主卡的凸起 raised 形成层级。 */
   box-shadow:
-    0 14px 34px rgba(10, 9, 30, 0.38),
-    0 2px 6px rgba(10, 9, 30, 0.3),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04); /* top hairline 模拟玻璃高光 */
+    inset 4px 4px 10px rgba(163, 177, 198, 0.5),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.6);
   overflow: hidden;
   position: relative;
   cursor: copy;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .agent-prompt:hover {
-  transform: translateY(-3px);
+  /* 浅主题 hover：凹槽变浅一点、外层浮现细微紫晕，不加 translateY
+     以免"凹进去的东西抬起来"语义矛盾。 */
   box-shadow:
-    0 20px 44px rgba(10, 9, 30, 0.46),
-    0 4px 10px rgba(10, 9, 30, 0.34),
-    inset 0 0 0 1px rgba(138, 138, 240, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    inset 3px 3px 8px rgba(163, 177, 198, 0.4),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.85),
+    0 0 0 1px rgba(108, 108, 229, 0.22),
+    0 10px 24px rgba(108, 108, 229, 0.14);
 }
 
-/* 顶部状态呼吸条：给终端卡增加一条动态的 ambient 光，隐喻"模型在 listen"。
-   走一个横向流光，非常低调，只在 pointer-fine 设备显示。 */
+/* 顶部状态光：浅主题改成 gossamer 紫线，暗主题（在下方）再换成银白。 */
 .agent-prompt::before {
   content: "";
   position: absolute;
@@ -370,9 +372,9 @@ body.dark section.agent .agent-brand--more:hover {
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(138, 138, 240, 0) 10%,
-    rgba(138, 138, 240, 0.55) 50%,
-    rgba(138, 138, 240, 0) 90%,
+    rgba(108, 108, 229, 0) 10%,
+    rgba(108, 108, 229, 0.45) 50%,
+    rgba(108, 108, 229, 0) 90%,
     transparent 100%
   );
   opacity: 0.55;
@@ -384,12 +386,9 @@ body.dark section.agent .agent-brand--more:hover {
   align-items: center;
   gap: 12px;
   padding: 11px 16px;
-  /* 半透明底 + 细分割线：比原来的实心 #272552 通透很多，
-     渐变会"穿过"头部和 body，视觉上是一块连续的玻璃，而不是两块拼接的板。 */
-  background: rgba(20, 19, 42, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* Header 比 body 再亮一点点 (#f7f9fd) 模拟"最高点反光"，加细分割线。 */
+  background: linear-gradient(180deg, #f7f9fd, #eef1f7);
+  border-bottom: 1px solid rgba(163, 177, 198, 0.28);
 }
 .agent-prompt-dots {
   display: inline-flex;
@@ -400,16 +399,19 @@ body.dark section.agent .agent-brand--more:hover {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #3a3960;
+  background: #c8ccd6;
   display: inline-block;
-  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+  /* 浅主题下 traffic light 点描边一圈深色，提升在浅底的辨识度。 */
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(163, 177, 198, 0.4);
 }
 .agent-prompt-dots span:nth-child(1) { background: #FF4C60; }
 .agent-prompt-dots span:nth-child(2) { background: #FFD15C; }
 .agent-prompt-dots span:nth-child(3) { background: #44D7B6; }
 
 .agent-prompt-label {
-  color: #c8c7ec;
+  color: #6b6b8c;
   font-size: 11.5px;
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -420,18 +422,18 @@ body.dark section.agent .agent-brand--more:hover {
   gap: 6px;
 }
 .agent-prompt-label i {
-  color: #8a8af0;
+  color: #6C6CE5;
   font-size: 12px;
 }
 
 .agent-prompt-body {
-  /* 抹掉全局 `pre` 默认：浅灰底 + 边框 + 圆角 会在这块深卡里露出一圈浅矩形。 */
+  /* 抹掉全局 `pre` 默认 (bg #e0e5ec + border + radius)，避免二次嵌套浅灰。 */
   margin: 0;
   padding: 20px 22px 22px 46px;
   font-family: "Rubik", "SF Mono", Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.75;
-  color: #e7e6ff;
+  color: #2e2c55;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -441,16 +443,16 @@ body.dark section.agent .agent-brand--more:hover {
   overflow-x: hidden;
   position: relative;
 }
-/* 提示符 `❯`：代替纯白前缀，暗示"这是一条等待执行的 prompt"，用紫青双色提亮。 */
+/* 提示符 `❯`：浅主题下用品牌紫，带细微发光呼应上方紫线。 */
 .agent-prompt-body::before {
   content: "❯";
   position: absolute;
   left: 22px;
   top: 19px;
-  color: #8a8af0;
+  color: #6C6CE5;
   font-weight: 700;
   font-size: 15px;
-  text-shadow: 0 0 12px rgba(138, 138, 240, 0.45);
+  text-shadow: 0 0 10px rgba(108, 108, 229, 0.35);
 }
 .agent-prompt-body code {
   color: inherit;
@@ -459,10 +461,10 @@ body.dark section.agent .agent-brand--more:hover {
   padding: 0;
 }
 .agent-prompt-url {
-  color: #a5a5ff;
-  /* 渐变下划线：text-decoration 无法渐变，改用 bottom 方向的 linear-gradient 伪下划线。 */
+  color: #6C6CE5;
+  /* 渐变下划线延续整站"紫 → 珊瑚"CTA 配色，浅底上辨识度比 underline 更高。 */
   text-decoration: none;
-  background-image: linear-gradient(90deg, rgba(138, 138, 240, 0.8), rgba(255, 106, 133, 0.6));
+  background-image: linear-gradient(90deg, rgba(108, 108, 229, 0.9), rgba(255, 76, 96, 0.75));
   background-repeat: no-repeat;
   background-size: 100% 1.5px;
   background-position: 0 100%;
@@ -470,11 +472,12 @@ body.dark section.agent .agent-brand--more:hover {
   transition: background-size 0.25s ease, color 0.25s ease;
 }
 .agent-prompt:hover .agent-prompt-url {
-  color: #c6c6ff;
+  color: #4a4ab8;
   background-size: 100% 2px;
 }
 
-/* copy button lives in the prompt header */
+/* copy button 在两套主题下都保持 "紫 → 珊瑚" hover 转换：不依赖主题底色，
+   始终是站点主 CTA 的色语。 */
 .agent-copy-btn {
   position: relative;
   border: 0;
@@ -486,8 +489,6 @@ body.dark section.agent .agent-brand--more:hover {
   font-weight: 600;
   letter-spacing: 0.4px;
   color: #fff;
-  /* 和终端的冷紫调呼应：默认态用紫 → 蓝紫渐变；hover 过渡到暖粉，
-     形成"从沉静到召唤"的互动反馈，比原来一上来就粉更克制。 */
   background: linear-gradient(135deg, #6C6CE5 0%, #8a8af0 100%);
   box-shadow:
     0 6px 16px rgba(108, 108, 229, 0.38),
@@ -711,9 +712,14 @@ body.dark section.agent .agent-code {
   background: rgba(138, 138, 240, 0.18);
   color: #b8b8ff;
 }
+/* ═══════════════════════════════════════════════════
+   暗色主题 prompt 卡：深空玻璃风格
+   ───────────────────────────────────────────────────
+   浅色主题走 "浅色 neumorphism 凹槽"（见 .agent-prompt 默认规则），
+   暗色主题彻底换一套 vocabulary：对角深紫渐变 + 低饱和径向光晕 +
+   hairline 描边，呼应暗色下 body 背景的 "deep space" 基调。
+   必须把浅色的 inset 凹槽 shadow 完全 reset 掉，否则会"两套 shadow 叠加"。 */
 body.dark section.agent .agent-prompt {
-  /* 暗色主题下：把 radial 光晕压深一点，让终端卡比整张 agent-card
-     的深紫底"更深一层"，形成 nested 的纵深感。 */
   background:
     radial-gradient(600px 220px at 12% -30%, rgba(108, 108, 229, 0.28), transparent 60%),
     radial-gradient(520px 200px at 108% 130%, rgba(255, 76, 96, 0.12), transparent 60%),
@@ -724,9 +730,38 @@ body.dark section.agent .agent-prompt {
     inset 0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
+body.dark section.agent .agent-prompt:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.62),
+    0 4px 10px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(138, 138, 240, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+body.dark section.agent .agent-prompt::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(138, 138, 240, 0) 10%,
+    rgba(138, 138, 240, 0.55) 50%,
+    rgba(138, 138, 240, 0) 90%,
+    transparent 100%
+  );
+}
 body.dark section.agent .agent-prompt-head {
   background: rgba(8, 7, 26, 0.55);
   border-bottom-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+body.dark section.agent .agent-prompt-dots span {
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+}
+body.dark section.agent .agent-prompt-body {
+  color: #e7e6ff;
+}
+body.dark section.agent .agent-prompt-body::before {
+  color: #8a8af0;
+  text-shadow: 0 0 12px rgba(138, 138, 240, 0.45);
 }
 body.dark section.agent .agent-hint {
   color: #cdcbe3;
@@ -743,11 +778,17 @@ body.dark section.agent .agent-card-title h3.light {
   text-shadow: none;
 }
 body.dark section.agent .agent-prompt-label {
-  color: #b6b5d8;
+  color: #c8c7ec;
+}
+body.dark section.agent .agent-prompt-label i {
+  color: #8a8af0;
 }
 body.dark section.agent .agent-prompt-url {
   color: #a5a5ff;
-  text-decoration-color: rgba(165, 165, 255, 0.4);
+  background-image: linear-gradient(90deg, rgba(138, 138, 240, 0.8), rgba(255, 106, 133, 0.6));
+}
+body.dark section.agent .agent-prompt:hover .agent-prompt-url {
+  color: #c6c6ff;
 }
 
 /* ── tablet (landscape phones & narrow tablets) ── */
